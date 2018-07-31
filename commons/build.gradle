@@ -1,0 +1,7 @@
+dependencies {
+    implementation 'org.hibernate:hibernate-core'
+    implementation 'org.springframework.data:spring-data-jpa'
+    implementation 'org.springframework.data:spring-data-commons'
+    implementation 'org.springframework.security:spring-security-core'
+
+}
