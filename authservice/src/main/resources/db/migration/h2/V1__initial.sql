@@ -73,8 +73,8 @@ CREATE TABLE users (
   password varchar(255) DEFAULT NULL,
   display_name varchar(255) DEFAULT NULL,
   enabled bit(1) NOT NULL,
-  created_date integer not null,
-  last_modified_date integer not null ,
+  created_date TIMESTAMP not null,
+  last_modified_date TIMESTAMP not null ,
   last_modified_by VARCHAR(50) not NULL,
   created_by VARCHAR(50) not NULL,
   version INT DEFAULT 0,
@@ -86,8 +86,8 @@ CREATE TABLE roles(
   id VARCHAR(40) not null,
   name VARCHAR(50) not null,
   description VARCHAR(50) not null,
-  created_date integer not null,
-  last_modified_date integer not null ,
+  created_date TIMESTAMP not null,
+  last_modified_date TIMESTAMP not null ,
   last_modified_by VARCHAR(50) not NULL,
   created_by VARCHAR(50) not NULL,
   version INT DEFAULT 0,
@@ -97,34 +97,34 @@ CREATE TABLE roles(
 
 
 create table users_roles(
-  users_id VARCHAR(40) not null,
-  roles_id VARCHAR(40) not null,
+  user_id VARCHAR(40) not null,
+  role_id VARCHAR(40) not null,
 );
 
 ALTER TABLE users_roles
-	ADD FOREIGN KEY (ROLES_ID)
+	ADD FOREIGN KEY (ROLE_ID)
 	REFERENCES ROLES (ID);
 
 ALTER TABLE users_roles
-	ADD FOREIGN KEY (USERS_ID)
+	ADD FOREIGN KEY (USER_ID)
 	REFERENCES USERS (ID);
 
 
 INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20000','张三', 1, 'user', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', 1533010893045, 1533010893045);
+VALUES ('297eaf7d508ebfe001508ebfefd20000','张三', 1, 'user', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31T15:49:56.985Z', '2018-07-31T15:49:56.985Z');
 
 INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('94cc5822179e4458a01b3f8346a25f4d', '李四:新致软件', 1, 'org:user', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', 1533010893045, 1533010893045);
+VALUES ('94cc5822179e4458a01b3f8346a25f4d', '李四:新致软件', 1, 'org:user', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31T15:49:56.985Z', '2018-07-31T15:49:56.985Z');
 
 INSERT INTO users (id,  display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebff0aa0001', '系统管理员', 1, 'admin', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', 'system', 'system', 1533010893045,1533010893045);
+VALUES ('297eaf7d508ebfe001508ebff0aa0001', '系统管理员', 1, 'admin', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', 'system', 'system', '2018-07-31T15:49:56.985Z','2018-07-31T15:49:56.985Z');
 
-INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('2d2994219a14476eba13c5036ecda147', 'ROLE_USER', '普通用户', 'system', 'system', 1533010893045,1533010893045);
-INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c98f', 'ROLE_ADMIN', '系统管理员', 'system', 'system', 1533010893045,1533010893045);
+INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('2d2994219a14476eba13c5036ecda147', 'ROLE_USER', '普通用户', 'system', 'system', '2018-07-31T15:49:56.985Z','2018-07-31T15:49:56.985Z');
+INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c98f', 'ROLE_ADMIN', '系统管理员', 'system', 'system', '2018-07-31T15:49:56.985Z','2018-07-31T15:49:56.985Z');
 
-INSERT into users_roles(roles_id, users_id)
+INSERT into users_roles(role_id, user_id)
 VALUES ('2d2994219a14476eba13c5036ecda147', '297eaf7d508ebfe001508ebfefd20000');
-INSERT into users_roles(roles_id, users_id)
+INSERT into users_roles(role_id, user_id)
 VALUES ('2d2994219a14476eba13c5036ecda147', '94cc5822179e4458a01b3f8346a25f4d');
-INSERT into users_roles(roles_id, users_id)
+INSERT into users_roles(role_id, user_id)
 VALUES ('f2a26d2090624570b6bb630ab546c98f', '297eaf7d508ebfe001508ebff0aa0001');

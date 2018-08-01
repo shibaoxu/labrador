@@ -12,9 +12,10 @@ public class UserController {
 
     @Autowired
     private CustomUserDetailsService userService;
+
     @GetMapping("/user/me")
-    public User user(){
+    public User user() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return (User)userService.loadUserByUsername(username);
+        return (User) userService.loadUserByUsername(username);
     }
 }

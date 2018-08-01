@@ -9,16 +9,16 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
-@SpringBootTest(classes = AutherserviceApplication.class)
-@ExtendWith(SpringExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName('测试Oauth配置')
+//@SpringBootTest(classes = AutherserviceApplication.class)
+//@ExtendWith(SpringExtension.class)
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@DisplayName('测试Oauth配置')
 class PasswordTests {
 
-    @Test
+//    @Test
     void testCreatePassword(){
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        println encoder.encode("password")
+
     }
 
 }

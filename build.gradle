@@ -4,10 +4,9 @@
  * This is a general purpose Gradle build.
  * Learn how to create Gradle builds at https://guides.gradle.org/creating-new-gradle-builds/
  */
-
 plugins {
-    id 'org.springframework.boot' version '2.0.3.RELEASE' apply false
-    // id 'io.spring.dependency-management' version "1.0.5.RELEASE" apply false
+    id 'org.springframework.boot' version "2.0.3.RELEASE" apply false
+    id 'io.spring.dependency-management' version "1.0.5.RELEASE" apply false
     id 'com.gorylenko.gradle-git-properties' version "1.4.21" apply false
     id 'io.franzbecker.gradle-lombok' version '1.14' apply false
 }
@@ -43,13 +42,12 @@ configure(findProjects(javaApps)) {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'groovy'
-    apply plugin: 'org.springframework.boot'
+//    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.gorylenko.gradle-git-properties'
     apply plugin: 'io.franzbecker.gradle-lombok'
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
-    apply plugin: 'pmd'
     apply plugin: 'jacoco'
 
     sourceCompatibility = 1.8
@@ -83,20 +81,6 @@ configure(findProjects(javaApps)) {
             html.enabled true
         }
     }
-    pmd {
-        ignoreFailures = true
-        pmdTest.enabled = false
-        toolVersion = '6.5.0'
-        ruleSetFiles = files("${rootProject.projectDir}/config/pmd/ruleset.xml")
-    }
-
-    tasks.withType(Pmd){
-        reports{
-            xml.enabled=true
-            html.enabled=true
-        }
-    }
-
     jacoco {
         toolVersion = '0.8.1'
         reportsDir = file("$buildDir/reports/jacoco")
@@ -112,8 +96,17 @@ configure(findProjects(javaApps)) {
         useJUnitPlatform()
     }
 
+    dependencyManagement {
+        imports {
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
 }
 configure(findProjects(bootApps)){
+
+    apply plugin: 'org.springframework.boot'
+
     bootRun {
         systemProperties  System.properties
     }
@@ -134,12 +127,6 @@ configure(findProjects(bootApps)){
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation('org.springframework.security:spring-security-test')
         testImplementation('io.github.http-builder-ng:http-builder-ng-core:1.0.3')    }
-
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        }
-    }
 }
 configure(findProjects(services)){
     dependencies {

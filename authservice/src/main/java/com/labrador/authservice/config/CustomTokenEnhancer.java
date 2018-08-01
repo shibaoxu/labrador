@@ -11,25 +11,26 @@ import java.util.Map;
 
 public class CustomTokenEnhancer implements TokenEnhancer {
     @Override
-    public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        Map<String, Object> additionalInfo = new HashMap<>();
+    public OAuth2AccessToken enhance(final OAuth2AccessToken accessToken, final OAuth2Authentication authentication) {
+        final Map<String, Object> additionalInfo = new HashMap<>();
         enhanceOrganization(additionalInfo, authentication);
         enhanceUserInfo(additionalInfo, authentication);
-        ((DefaultOAuth2AccessToken)accessToken).setAdditionalInformation(additionalInfo);
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
-    private void enhanceOrganization(Map<String, Object> additionalInfo,  OAuth2Authentication authentication){
-        if (authentication.getName().startsWith("org")){
+
+    private void enhanceOrganization(Map<String, Object> additionalInfo, final OAuth2Authentication authentication) {
+        if (authentication.getName().startsWith("org")) {
             additionalInfo.put("organization", "ORG");
-        }else{
+        } else {
             additionalInfo.put("organization", "");
         }
     }
 
-    private void enhanceUserInfo(Map<String, Object> additionalInfo,  OAuth2Authentication authentication){
-        String grantType = authentication.getOAuth2Request().getGrantType();
-        if (grantType != null && !grantType.equalsIgnoreCase("client_credentials")){
-            User user = (User)authentication.getPrincipal();
+    private void enhanceUserInfo(Map<String, Object> additionalInfo, final OAuth2Authentication authentication) {
+        final String grantType = authentication.getOAuth2Request().getGrantType();
+        if (grantType != null && !grantType.equalsIgnoreCase("client_credentials")) {
+            User user = (User) authentication.getPrincipal();
             additionalInfo.put("displayName", user.getDisplayName());
         }
     }
