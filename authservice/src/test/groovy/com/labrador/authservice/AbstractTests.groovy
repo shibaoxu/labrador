@@ -1,15 +1,12 @@
 package com.labrador.authservice
 
+import com.newtouch.labrador.commontests.BaseTest
 import groovy.json.JsonSlurper
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest
+import org.junit.jupiter.api.BeforeAll
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.jwt.Jwt
 import org.springframework.security.jwt.JwtHelper
-import org.springframework.security.web.FilterChainProxy;
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.security.web.FilterChainProxy
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -18,22 +15,18 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.context.WebApplicationContext
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@SpringBootTest(classes = AutherserviceApplication.class)
-@ExtendWith(SpringExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class AbstractTests {
+abstract class AbstractTests extends BaseTest{
     public static final String OAUTH_TOKEN_URL = "/oauth/token"
     public static final String REFRESH_TOKEN_URL = "/oauth/refresh_token"
     public static final String USER_INFO_URL = "/user/me"
 
     public static final String TRUST_WEB_APP = "trust-web";
     public static final String TRUST_MOBILE_APP = "trust-mobile";
-    public static final String THIRD_PARTY_WEB_APP = "third-party-web-app";
+    public static final String THIRD_PARTY_WEB_APP = "third-party-web-app"
     public static final String CLIENT_PASSWORD = 'password'
 
     public static final String GRANT_TYPE_OF_PASSWORD = "password"

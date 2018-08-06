@@ -15,15 +15,13 @@ ext {
 }
 
 def javaApps = [
-    ':authservice', ':commons'
+    ':authservice', ':commons', ':common-tests', ':eurekaservice', ':configservice'
 ]
 
-def bootApps = javaApps - ':commons'
+def bootApps = javaApps - ':commons' - ':common-tests'
 
-// def eurekaClients = bootApps - ':one-eureka' - ':one-sso'
-// def configClients = bootApps - ':one-eureka'
-// def cloudServer = [':one-config-server', ':one-eureka', ':one-zuul']
-def services = bootApps
+def cloudServer = [':eurekaservice', ':configservice']
+def services = bootApps - cloudServer
 def jsApps = [
 ]
 
@@ -42,7 +40,6 @@ configure(findProjects(javaApps)) {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'groovy'
-//    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.gorylenko.gradle-git-properties'
     apply plugin: 'io.franzbecker.gradle-lombok'
@@ -101,6 +98,10 @@ configure(findProjects(javaApps)) {
             mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
+        dependencies {
+            dependency 'org.codehaus.groovy:groovy-all:2.4.15'
+            dependency 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
+        }
     }
 }
 configure(findProjects(bootApps)){
@@ -110,30 +111,39 @@ configure(findProjects(bootApps)){
     bootRun {
         systemProperties  System.properties
     }
+
+    test {
+        systemProperty  'spring.profiles.active', System.getProperty('spring.profiles.active')
+//        systemProperties = System.properties
+    }
+
     springBoot {
         buildInfo()
     }
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
-        implementation project(':commons')
-        runtimeOnly 'mysql:mysql-connector-java'
-        runtimeOnly 'com.h2database:h2'
-        runtimeOnly 'org.flywaydb:flyway-core'
+
         testImplementation('org.springframework.boot:spring-boot-starter-test'){
             exclude group:'junit', module:'junit'
         }
-        testImplementation('org.codehaus.groovy:groovy-all:2.4.15')
+        testImplementation('org.codehaus.groovy:groovy-all')
         testImplementation('org.junit.jupiter:junit-jupiter-api')
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation('org.springframework.security:spring-security-test')
-        testImplementation('io.github.http-builder-ng:http-builder-ng-core:1.0.3')    }
+        testImplementation('io.github.http-builder-ng:http-builder-ng-core')
+        testImplementation project(':common-tests')
+
+    }
 }
 configure(findProjects(services)){
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
-
+        implementation project(':commons')
+        runtimeOnly 'mysql:mysql-connector-java'
+        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'org.flywaydb:flyway-core'
         runtimeOnly 'org.springframework.boot:spring-boot-devtools'
     }
 }

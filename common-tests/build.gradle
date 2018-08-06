@@ -1,0 +1,12 @@
+description = 'commons for test'
+dependencies {
+
+    implementation 'org.springframework:spring-tx'
+    implementation('org.springframework.boot:spring-boot-starter-test'){
+        exclude group:'junit', module:'junit'
+    }
+    implementation('org.codehaus.groovy:groovy-all:2.4.15')
+    implementation('org.junit.jupiter:junit-jupiter-api')
+    implementation("org.junit.jupiter:junit-jupiter-engine")
+    implementation('org.springframework.security:spring-security-test')
+}

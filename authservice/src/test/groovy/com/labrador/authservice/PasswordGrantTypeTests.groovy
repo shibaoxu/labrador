@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName('测试Password授权模式')
 class PasswordGrantTypeTests extends AbstractTests {
 
-
     @Test
     void testLoginWithUserSuccess() throws Exception {
         def resp = loginWithPassword(USER, USER_PASSWORD, TRUST_WEB_APP, CLIENT_PASSWORD)
@@ -101,6 +100,24 @@ class PasswordGrantTypeTests extends AbstractTests {
         def resp = new JsonSlurper().parseText(result.andReturn().getResponse().getContentAsString())
         assertThat(resp.error).isEqualTo('invalid_grant')
         assertThat(resp.error_description).isEqualTo('Bad credentials')
+    }
+
+    @Test
+    void testLoginWithWrongUsername(){
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>()
+        params.add("grant_type", GRANT_TYPE_OF_PASSWORD)
+        params.add("username", "WrongUserName")
+        params.add("password", 'wrongPassword')
+
+        ResultActions result = this.mockMvc.perform(post(OAUTH_TOKEN_URL)
+                .params(params)
+                .with(httpBasic(TRUST_WEB_APP, CLIENT_PASSWORD))
+                .accept(JSON_ACCEPT)
+        ).andExpect(status().is(400))
+        def resp = new JsonSlurper().parseText(result.andReturn().getResponse().getContentAsString())
+        assertThat(resp.error).isEqualTo('invalid_grant')
+        assertThat(resp.error_description).isEqualTo('Bad credentials')
+
     }
 
     @Test

@@ -60,7 +60,7 @@ public class EntityWithUUID {
 
         EntityWithUUID that = (EntityWithUUID) o;
 
-        if (StringUtils.hasText(this.getId()) || StringUtils.hasText(that.getId())){
+        if (!StringUtils.hasText(this.getId()) || !StringUtils.hasText(that.getId())){
             return false;
         }
         return id.equals(that.getId());

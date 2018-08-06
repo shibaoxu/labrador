@@ -3,22 +3,17 @@ package com.labrador.authservice.entity;
 import javax.persistence.Entity;
 
 import com.newtouch.labrador.commons.db.EntityWithUUID;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity(name = "roles")
 public class Role extends EntityWithUUID implements Serializable {
+    @EqualsAndHashCode.Include
     private String name;
-
-    public Role() {
-    }
-
-    public Role(String id, String name) {
-        this.setId(id);
-        this.setName(name);
-    }
 }
