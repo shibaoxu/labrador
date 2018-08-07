@@ -54,6 +54,9 @@ configure(findProjects(javaApps)) {
        options.compilerArgs += ["-Xlint:unchecked"]
     }
     repositories {
+        maven {
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
         mavenCentral()
     }
 
