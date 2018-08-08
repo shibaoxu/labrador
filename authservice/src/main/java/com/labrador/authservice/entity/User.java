@@ -8,8 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import org.springframework.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -54,17 +52,17 @@ public class User extends EntityWithUUID implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return enabled;
+        return this.isEnabled();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return enabled;
+        return this.isEnabled();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return enabled;
+        return this.enabled;
     }
 
     @Override

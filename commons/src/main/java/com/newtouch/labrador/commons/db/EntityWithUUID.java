@@ -18,16 +18,8 @@ import java.time.Instant;
 public class EntityWithUUID {
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(
-            name = "uuid",
-            strategy = "org.hibernate.id.UUIDGenerator",
-            parameters = {
-                    @Parameter(
-                            name = "uuid_gen_strategy_class",
-                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )
-            }
-    )
+    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator", parameters = {
+            @Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
     private String id;
 
     @Column(updatable = false)
@@ -40,7 +32,7 @@ public class EntityWithUUID {
     private String lastModifiedBy;
 
     @PrePersist
-    public void setInsertInfo(){
+    public void setInsertInfo() {
         this.createdDate = Instant.now();
         this.lastModifiedDate = createdDate;
         this.createdBy = SecurityUtils.getUsername();
@@ -48,7 +40,7 @@ public class EntityWithUUID {
     }
 
     @PreUpdate
-    public void setUpdateInfo(){
+    public void setUpdateInfo() {
         this.lastModifiedDate = Instant.now();
         this.lastModifiedBy = SecurityUtils.getUsername();
     }
@@ -64,7 +56,7 @@ public class EntityWithUUID {
 
         EntityWithUUID that = (EntityWithUUID) o;
 
-        if (!StringUtils.hasText(this.getId()) || !StringUtils.hasText(that.getId())){
+        if (!StringUtils.hasText(this.getId()) || !StringUtils.hasText(that.getId())) {
             return false;
         }
         return id.equals(that.getId());
@@ -73,6 +65,6 @@ public class EntityWithUUID {
 
     @Override
     public int hashCode() {
-        return id == null? 0: id.hashCode();
+        return id == null ? 0 : id.hashCode();
     }
 }
