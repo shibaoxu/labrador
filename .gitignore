@@ -14,7 +14,8 @@ deploy/*.retry
 .settings
 .springBeans
 .sts4-cache
-
+### sonarqube
+.scannerwork
 ### IntelliJ IDEA ###
 .idea
 *.iws
