@@ -14,8 +14,9 @@ plugins {
 ext {
     springCloudVersion = 'Finchley.RELEASE'
 }
-
-System.setProperty('sonar.host.url', System.getenv('SONAR_HOST_URL'))
+if (System.getenv('SONAR_HOST_URL')) {
+    System.setProperty('sonar.host.url', System.getenv('SONAR_HOST_URL'))
+}
 
 def javaApps = [
     ':authservice', ':commons', ':common-tests', ':eurekaservice', ':configservice'
