@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Builder
 @Entity(name = "roles")
 public class Role extends EntityWithUUID implements Serializable {
-    @EqualsAndHashCode.Include
+    private static final long serialVersionUID = 1L;
+	@EqualsAndHashCode.Include
     private String name;
 }

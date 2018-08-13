@@ -1,3 +1,6 @@
 spring:
   application:
     name: configservice
+
+server:
+  port: 8888
