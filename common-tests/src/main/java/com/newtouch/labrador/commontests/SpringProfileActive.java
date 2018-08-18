@@ -7,6 +7,6 @@ public class SpringProfileActive implements ActiveProfilesResolver {
     @Override
     public String[] resolve(Class<?> aClass) {
         final String activeProfile = System.getProperty("spring.profiles.active");
-        return new String[]{activeProfile == null ? "test" : activeProfile};
+        return new String[]{activeProfile == null || activeProfile.equals("compose")? "test" : activeProfile};
     }
 }

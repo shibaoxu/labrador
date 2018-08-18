@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    include:
+      - native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:../service-configrations/{application}, file:../service-configrations
