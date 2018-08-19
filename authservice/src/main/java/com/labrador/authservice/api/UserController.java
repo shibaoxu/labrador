@@ -1,4 +1,4 @@
-package com.labrador.authservice.controller;
+package com.labrador.authservice.api;
 
 import com.labrador.authservice.entity.User;
 import com.labrador.authservice.service.CustomUserDetailsService;

@@ -16,7 +16,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@SpringBootTest(classes = AutherserviceApplication.class)
+@SpringBootTest(classes = AuthserviceApplication.class)
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName('测试Password授权模式')

@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    config:
+      allowOverride: true
+      overrideSystemProperties: false
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+whoami: instance1

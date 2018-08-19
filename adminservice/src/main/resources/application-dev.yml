@@ -1,0 +1,5 @@
+server:
+  port: 6061
+eureka:
+  client:
+    enabled: false

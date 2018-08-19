@@ -1,0 +1,4 @@
+description = 'admin service'
+dependencies {
+    implementation 'commons-io:commons-io:2.5'
+}

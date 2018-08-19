@@ -1,12 +1,13 @@
 spring:
   application:
-    name: authservice
+    name: adminservice
 ---
 spring:
   profiles: dev, test
   cloud:
     config:
       enabled: false
+
 ---
 spring:
   profiles: compose
