@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: zuulservice
+server:
+  port: 8763
+zuul:
+  sensitive-headers:
+  routes:
+    adminservice:
+      path: /admin/**
+    authservice:
+      path: /auth/**
