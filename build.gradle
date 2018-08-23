@@ -3,8 +3,8 @@ buildscript {
         maven {
             url "http://maven.aliyun.com/nexus/content/groups/public/"
         }
-        jcenter()
-        mavenCentral()
+        // jcenter()
+        // mavenCentral()
     }
     dependencies {
         classpath 'se.transmode.gradle:gradle-docker:1.2'
