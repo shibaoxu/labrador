@@ -2,7 +2,7 @@ package com.labrador.authservice.entity;
 
 import javax.persistence.Entity;
 
-import com.newtouch.labrador.commons.db.EntityWithUUID;
+import com.labrador.commons.db.EntityWithUUID;
 import lombok.*;
 
 import java.io.Serializable;

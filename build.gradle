@@ -26,7 +26,7 @@ if (System.getenv('SONAR_HOST_URL')) {
 }
 
 def javaApps = [
-    ':authservice',':adminservice',
+    ':authservice',':adminservice', 'accountservice',
     ':commons', ':common-tests',
     ':eurekaservice', ':configservice', ':turbineservice', ':zuulservice'
 ]
@@ -201,6 +201,7 @@ configure(findProjects(services)){
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard'
 
         implementation project(':commons')
+        implementation 'commons-io:commons-io:2.5'
         runtimeOnly 'mysql:mysql-connector-java'
         runtimeOnly 'com.h2database:h2'
         runtimeOnly 'org.flywaydb:flyway-core'
@@ -208,9 +209,6 @@ configure(findProjects(services)){
     }
 }
 
-task hello {
-    println 'hello'
-}
 dockerCompose {
     useComposeFiles = ['./docker/cloud-server-compose.yml']
     startedServices = ['configservice', 'eurekaservice']

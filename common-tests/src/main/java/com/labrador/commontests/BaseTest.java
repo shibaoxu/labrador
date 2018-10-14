@@ -1,4 +1,4 @@
-package com.newtouch.labrador.commontests;
+package com.labrador.commontests;
 
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -4,4 +4,6 @@ dependencies {
     implementation 'org.springframework.data:spring-data-jpa'
     implementation 'org.springframework.data:spring-data-commons'
     implementation 'org.springframework.security:spring-security-core'
+    implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+    implementation 'commons-io:commons-io:2.5'
 }

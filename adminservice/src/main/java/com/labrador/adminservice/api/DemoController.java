@@ -11,33 +11,37 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/api/demo")
+@RequestMapping("/demo")
 public class DemoController {
-    @Autowired
-    private EurekaClient discoveryClient;
-
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @GetMapping("/hello")
+    @GetMapping
     public String hello(){
-        return "Welcome";
+        return "hello, i am adminservice";
     }
-
-    @GetMapping("whoAmI")
-    @HystrixCommand(fallbackMethod = "busy")
-    public String whoAmI(){
-        InstanceInfo instanceInfo = discoveryClient.getNextServerFromEureka("AUTHSERVICE", false);
-        return instanceInfo.getHomePageUrl();
-    }
-
-    public String busy(){
-        return "I am busy, please wait.";
-    }
-
-    @GetMapping("comsumeWhoAmI")
-    public String comsumeWhoAmI(){
-        String name = restTemplate.getForEntity("http://AUTHSERVICE/api/demo/whoami", String.class).getBody();
-        return "Welcome " + name;
-    }
+//    @Autowired
+//    private EurekaClient discoveryClient;
+//
+//    @Autowired
+//    private RestTemplate restTemplate;
+//
+//    @GetMapping("/hello")
+//    public String hello(){
+//        return "Welcome";
+//    }
+//
+//    @GetMapping("whoAmI")
+//    @HystrixCommand(fallbackMethod = "busy")
+//    public String whoAmI(){
+//        InstanceInfo instanceInfo = discoveryClient.getNextServerFromEureka("AUTHSERVICE", false);
+//        return instanceInfo.getHomePageUrl();
+//    }
+//
+//    public String busy(){
+//        return "I am busy, please wait.";
+//    }
+//
+//    @GetMapping("comsumeWhoAmI")
+//    public String comsumeWhoAmI(){
+//        String name = restTemplate.getForEntity("http://AUTHSERVICE/api/demo/whoami", String.class).getBody();
+//        return "Welcome " + name;
+//    }
 }

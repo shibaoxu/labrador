@@ -1,4 +1,4 @@
-package com.newtouch.labrador.commons.security;
+package com.labrador.commons.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

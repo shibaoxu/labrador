@@ -1,7 +1,7 @@
 package com.labrador.authservice
 
 import com.labrador.authservice.entity.User
-import com.newtouch.labrador.commons.db.EntityWithUUID
+import com.labrador.commons.db.EntityWithUUID
 import org.junit.jupiter.api.Test
 
 

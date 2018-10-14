@@ -8,6 +8,6 @@
  */
 
 rootProject.name = 'labrador'
-include 'authservice', 'adminservice'
+include 'authservice', 'adminservice', 'accountservice'
 include 'commons', 'common-tests'
 include 'eurekaservice', 'configservice', 'turbineservice', 'zuulservice'

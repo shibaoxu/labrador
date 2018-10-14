@@ -1,4 +1,4 @@
-package com.newtouch.labrador.commontests;
+package com.labrador.commontests;
 
 
 import org.springframework.test.context.ActiveProfilesResolver;

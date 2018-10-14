@@ -8,4 +8,4 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
-whoami: instance1
+whoami: from config server

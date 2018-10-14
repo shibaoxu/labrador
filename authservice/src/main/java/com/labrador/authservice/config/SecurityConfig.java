@@ -21,12 +21,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/login").permitAll()
+        http.authorizeRequests()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/oauth/token/revokeById/**").permitAll()
                 .antMatchers("/tokens/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
-                .and().csrf().disable();
+                .and().csrf().disable()
+                .headers().frameOptions().disable();
     }
 
     @Bean

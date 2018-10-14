@@ -1,6 +1,6 @@
-package com.newtouch.labrador.commons.db;
+package com.labrador.commons.db;
 
-import com.newtouch.labrador.commons.security.SecurityUtils;
+import com.labrador.commons.security.SecurityUtils;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

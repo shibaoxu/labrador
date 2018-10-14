@@ -2,7 +2,7 @@ package com.labrador.authservice.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.newtouch.labrador.commons.db.EntityWithUUID;
+import com.labrador.commons.db.EntityWithUUID;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
