@@ -97,16 +97,16 @@ CREATE TABLE roles(
 
 
 create table users_roles(
-  user_id VARCHAR(40) not null,
-  role_id VARCHAR(40) not null,
+  users_id VARCHAR(40) not null,
+  roles_id VARCHAR(40) not null,
 );
 
 ALTER TABLE users_roles
-	ADD FOREIGN KEY (ROLE_ID)
+	ADD FOREIGN KEY (ROLES_ID)
 	REFERENCES ROLES (ID);
 
 ALTER TABLE users_roles
-	ADD FOREIGN KEY (USER_ID)
+	ADD FOREIGN KEY (USERS_ID)
 	REFERENCES USERS (ID);
 
 
@@ -122,9 +122,9 @@ VALUES ('297eaf7d508ebfe001508ebff0aa0001', '系统管理员', 1, 'admin', '{bcr
 INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('2d2994219a14476eba13c5036ecda147', 'ROLE_USER', '普通用户', 'system', 'system', '2018-07-31T15:49:56.985Z','2018-07-31T15:49:56.985Z');
 INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c98f', 'ROLE_ADMIN', '系统管理员', 'system', 'system', '2018-07-31T15:49:56.985Z','2018-07-31T15:49:56.985Z');
 
-INSERT into users_roles(role_id, user_id)
+INSERT into users_roles(roles_id, users_id)
 VALUES ('2d2994219a14476eba13c5036ecda147', '297eaf7d508ebfe001508ebfefd20000');
-INSERT into users_roles(role_id, user_id)
+INSERT into users_roles(roles_id, users_id)
 VALUES ('2d2994219a14476eba13c5036ecda147', '94cc5822179e4458a01b3f8346a25f4d');
-INSERT into users_roles(role_id, user_id)
+INSERT into users_roles(roles_id, users_id)
 VALUES ('f2a26d2090624570b6bb630ab546c98f', '297eaf7d508ebfe001508ebff0aa0001');

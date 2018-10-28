@@ -1,1 +1,5 @@
 description = 'account service'
+
+dependencies {
+    implementation 'org.passay:passay:1.3.1'
+}

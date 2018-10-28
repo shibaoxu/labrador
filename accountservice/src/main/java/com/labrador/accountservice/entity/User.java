@@ -1,7 +1,6 @@
 package com.labrador.accountservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.labrador.commons.db.EntityWithUUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -28,13 +26,13 @@ import java.util.Set;
 public class User extends EntityWithUUID{
 
     @Length(min = 3, max = 50)
-    @NotBlank
+    @NotBlank()
     @Column(updatable = false, unique = true)
     @EqualsAndHashCode.Include
     private String username;
 
     @Length(min = 3, max = 50)
-    @NotBlank
+    @NotBlank(message = "{email.notempty}")
     private String displayName;
 
     @Transient
@@ -49,7 +47,7 @@ public class User extends EntityWithUUID{
     private boolean enabled = true;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
 
     public User(String username, String displayName, String plainPassword){
         this.username = username;

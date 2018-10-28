@@ -45,6 +45,9 @@ public class EntityWithUUID {
         this.lastModifiedBy = SecurityUtils.getUsername();
     }
 
+    public boolean isNew(){
+        return !StringUtils.hasText(id);
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -67,4 +70,10 @@ public class EntityWithUUID {
     public int hashCode() {
         return id == null ? 0 : id.hashCode();
     }
+
+    @Override
+    public String toString(){
+        return this.getClass().getName() + "@" + getId();
+    }
+
 }

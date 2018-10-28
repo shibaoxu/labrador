@@ -199,7 +199,8 @@ configure(findProjects(services)){
         implementation 'org.springframework.cloud:spring-cloud-starter-config'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard'
-
+        implementation 'com.querydsl:querydsl-jpa'
+        
         implementation project(':commons')
         implementation 'commons-io:commons-io:2.5'
         runtimeOnly 'mysql:mysql-connector-java'
