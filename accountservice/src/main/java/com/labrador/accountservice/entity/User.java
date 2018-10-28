@@ -32,7 +32,7 @@ public class User extends EntityWithUUID{
     private String username;
 
     @Length(min = 3, max = 50)
-    @NotBlank(message = "{email.notempty}")
+    @NotBlank
     private String displayName;
 
     @Transient

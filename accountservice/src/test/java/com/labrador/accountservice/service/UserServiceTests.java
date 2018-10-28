@@ -1,4 +1,4 @@
-package com.labrador.accountservice;
+package com.labrador.accountservice.service;
 
 import com.labrador.accountservice.entity.Role;
 import com.labrador.accountservice.entity.User;
@@ -8,6 +8,7 @@ import com.labrador.commontests.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,19 +28,19 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class UserTests extends BaseTest {
+public class UserServiceTests extends BaseTest {
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private MessageSource messageSource;
+    private ResourceBundleMessageSource messageSource;
 
     @Autowired
     private UserValidator userValidator;
 
     @Autowired
-    private LocalValidatorFactoryBean defaultValidator;
+    private UserValidator validator;
 
     private static Pageable UNSORTED = PageRequest.of(0, 10);
     private static Pageable SORTED_USERNMAE_DESC = PageRequest.of(0, 10, new Sort(Sort.Direction.DESC, "username"));
@@ -103,13 +104,13 @@ public class UserTests extends BaseTest {
     @Test
     void testValidate(){
         User user = new User();
-        defaultValidator.setValidationMessageSource(messageSource);
+//        defaultValidator.setValidationMessageSource(messageSource);
 //        user.setUsername("ad");
 //        user.setDisplayName("管理员");
 //        user.setPlainPassword("password");
         Errors errors = new BeanPropertyBindingResult(user, "user");
 //        userValidator.validate(user, errors);
-        defaultValidator.validate(user, errors);
+        validator.validate(user, errors);
 //        assertThat(errors.getErrorCount()).isEqualTo(4);
         List<String> errorMessages = errors.getAllErrors().stream().map(
                 error -> messageSource.getMessage(error.getCode(), error.getArguments(), Locale.CHINA)

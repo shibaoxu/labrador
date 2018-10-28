@@ -9,16 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Arrays;
 
 @Service
 @Transactional(readOnly = true)
 public class UserValidator implements Validator {
-    @Autowired
+//    @Autowired
 //    private LocalValidatorFactoryBean defaultValidator;
-    private Validator defaultValidator;
+//    private Validator defaultValidator;
 
     @Autowired
     private UserRepository userRepository;
@@ -30,7 +29,7 @@ public class UserValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        defaultValidator.validate(target, errors);
+//        defaultValidator.validate(target, errors);
 
         User user = (User)target;
         validateUnique(user, errors);
