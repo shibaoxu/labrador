@@ -2,6 +2,7 @@ package com.labrador.accountservice.api;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
+import com.labrador.accountservice.utils.MockMvcTestUtils;
 import com.labrador.commontests.SpringProfileActive;
 import org.assertj.core.api.AbstractInstantAssert;
 import org.junit.jupiter.api.Test;
@@ -318,9 +319,15 @@ public class UserControllerTest {
                     .param("username", "user")
                     .param("displayName", "displayName")
         ).andExpect(status().isBadRequest());
-        System.out.println(result.andReturn().getResponse().getContentAsString());
 
+        Map<String, Object> resp = MockMvcTestUtils.parseResponseToMap(result);
+        assertThat(resp)
+                .containsEntry("status", HttpStatus.BAD_REQUEST.value())
+                .containsEntry("error", HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .containsEntry("details", "unable find com.labrador.accountservice.entity.User with id NonExistId")
+                .containsEntry("message", "unable find the entity");
     }
+
     @Test
     void testGetUserById() throws Exception {
         ResultActions result = mockMvc.perform(

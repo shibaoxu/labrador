@@ -1,6 +1,9 @@
 package com.labrador.accountservice.repository;
 
 import com.labrador.accountservice.entity.User;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -11,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Repository
@@ -40,9 +44,15 @@ public interface UserRepository extends JpaRepository<User, String> {
 //            @Param("enabled") boolean enabled);
 
     default Optional<User> update(User user){
-        User originnUser = getOne(user.getId());
-        originnUser.setDisplayName(user.getDisplayName());
-        originnUser.setEnabled(user.isEnabled());
-        return Optional.of(save(originnUser));
+        try {
+            User originnUser = getOne(user.getId());
+            originnUser.setDisplayName(user.getDisplayName());
+            originnUser.setEnabled(user.isEnabled());
+            return Optional.of(save(originnUser));
+        } catch (EntityNotFoundException ex){
+            Logger logger = LoggerFactory.getLogger(UserRepository.class.getName());
+            logger.warn("try update a nonexist user with id {}", user.getId());
+            throw new com.labrador.accountservice.exception.EntityNotFoundException(user.getClass().getName(), user.getId());
+        }
     }
 }

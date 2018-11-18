@@ -1,5 +1,7 @@
 package com.labrador.accountservice.api;
 
+import com.labrador.accountservice.exception.EntityNotFoundErrorAttributes;
+import com.labrador.accountservice.exception.EntityNotFoundException;
 import com.labrador.accountservice.exception.EntityValidateErrorAttibutes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
@@ -29,6 +30,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({EntityNotFoundException.class, Exception.class})
     public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex,  WebRequest request){
         System.out.println(ex.getLocalizedMessage());
-        return new ResponseEntity<>("", null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new EntityNotFoundErrorAttributes(ex, request, messageSource), null, HttpStatus.BAD_REQUEST);
     }
 }
