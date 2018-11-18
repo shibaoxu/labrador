@@ -1,17 +1,22 @@
 package com.labrador.accountservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.labrador.commons.db.EntityWithUUID;
+import com.labrador.accountservice.entity.validation.PasswordStrength;
+import com.labrador.commons.entity.EntityWithUUID;
+import com.labrador.commons.entity.validation.NewEntityValidationGroup;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import javax.persistence.*;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
-import java.util.*;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,7 +31,7 @@ import java.util.*;
 public class User extends EntityWithUUID{
 
     @Length(min = 3, max = 50)
-    @NotBlank()
+    @NotBlank
     @Column(updatable = false, unique = true)
     @EqualsAndHashCode.Include
     private String username;
@@ -37,13 +42,15 @@ public class User extends EntityWithUUID{
 
     @Transient
     @JsonIgnore
+    @PasswordStrength(groups = NewEntityValidationGroup.class)
     private String plainPassword;
 
     @Column(updatable = false)
-    @NotBlank
+    @NotBlank(groups = NewEntityValidationGroup.class)
     @JsonIgnore
     private String password;
 
+    @AssertTrue(groups = NewEntityValidationGroup.class)
     private boolean enabled = true;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -57,6 +64,6 @@ public class User extends EntityWithUUID{
 
     public void setPlainPassword(String plainPassword) {
         this.plainPassword = plainPassword;
-        this.password = new BCryptPasswordEncoder().encode(plainPassword);
+        this.password = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(plainPassword);
     }
 }

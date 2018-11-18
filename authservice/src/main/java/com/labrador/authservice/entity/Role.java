@@ -1,10 +1,9 @@
 package com.labrador.authservice.entity;
 
-import javax.persistence.Entity;
-
-import com.labrador.commons.db.EntityWithUUID;
+import com.labrador.commons.entity.EntityWithUUID;
 import lombok.*;
 
+import javax.persistence.Entity;
 import java.io.Serializable;
 
 @Data

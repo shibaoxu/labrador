@@ -2,31 +2,28 @@ package com.labrador.accountservice.service;
 
 import com.labrador.accountservice.entity.Role;
 import com.labrador.accountservice.entity.User;
-import com.labrador.accountservice.service.UserService;
-import com.labrador.accountservice.service.UserValidator;
+import com.labrador.commons.entity.validation.NewEntityValidationGroup;
+import com.labrador.commons.entity.validation.UpdateEntityValidationGroup;
 import com.labrador.commontests.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.Validator;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.test.annotation.DirtiesContext;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
 
 public class UserServiceTests extends BaseTest {
 
@@ -34,20 +31,17 @@ public class UserServiceTests extends BaseTest {
     private UserService userService;
 
     @Autowired
+    private Validator validator;
+
+    @Autowired
     private ResourceBundleMessageSource messageSource;
-
-    @Autowired
-    private UserValidator userValidator;
-
-    @Autowired
-    private UserValidator validator;
 
     private static Pageable UNSORTED = PageRequest.of(0, 10);
     private static Pageable SORTED_USERNMAE_DESC = PageRequest.of(0, 10, new Sort(Sort.Direction.DESC, "username"));
     private static Pageable SORTED_USERNAME_ASC = PageRequest.of(0, 10, new Sort(Sort.Direction.ASC, "username"));;
 
     @Test
-    void testFindAllNotSort(){
+    void test_find_all_not_sorted(){
         Page<User> users = userService.findAll(UNSORTED);
         assertThat(users.getTotalElements()).isEqualTo(3);
         assertThat(users.getTotalPages()).isEqualTo(1);
@@ -64,7 +58,7 @@ public class UserServiceTests extends BaseTest {
     }
 
     @Test
-    void testFindAllSort(){
+    void test_find_all_and_sorted(){
         Page<User> page = userService.findAll(SORTED_USERNMAE_DESC);
         assertThat(page.getContent()).extracting("username").containsExactly("user", "org:user", "admin");
 
@@ -73,7 +67,7 @@ public class UserServiceTests extends BaseTest {
     }
 
     @Test
-    void testFindAllByCondition(){
+    void test_find_all_by_condition(){
         // unsort
         Page<User> page = userService.findAll("use", UNSORTED);
         assertThat(page.getContent()).extracting("username").containsExactlyInAnyOrder("user", "org:user");
@@ -92,7 +86,7 @@ public class UserServiceTests extends BaseTest {
     }
 
     @Test
-    void testFindById(){
+    void test_find_by_id(){
         String id = "297eaf7d508ebfe001508ebfefd20000";
         Optional<User> user = userService.find(id);
         assertThat(user.get()).isNotNull();
@@ -102,22 +96,45 @@ public class UserServiceTests extends BaseTest {
     }
 
     @Test
-    void testValidate(){
+    void test_new_user_validate(){
+        Locale.setDefault(Locale.ENGLISH);
+
         User user = new User();
-//        defaultValidator.setValidationMessageSource(messageSource);
-//        user.setUsername("ad");
-//        user.setDisplayName("管理员");
-//        user.setPlainPassword("password");
-        Errors errors = new BeanPropertyBindingResult(user, "user");
-//        userValidator.validate(user, errors);
-        validator.validate(user, errors);
-//        assertThat(errors.getErrorCount()).isEqualTo(4);
-        List<String> errorMessages = errors.getAllErrors().stream().map(
-                error -> messageSource.getMessage(error.getCode(), error.getArguments(), Locale.CHINA)
-        ).collect(Collectors.toList());
-        System.out.println("");
+        Set<ConstraintViolation<User>> violations = validator.validate(user, NewEntityValidationGroup.class);
+        assertThat(
+                violations.stream().map(it -> tuple(it.getPropertyPath().toString(), it.getMessageTemplate(), it.getMessage()))
+                ).containsExactlyInAnyOrder(
+                    tuple("plainPassword", "password is too weak", "password is too weak"),
+                    tuple("password","{javax.validation.constraints.NotBlank.message}","must not be blank"),
+                    tuple("username", "{javax.validation.constraints.NotBlank.message}", "must not be blank"),
+                    tuple("displayName", "{javax.validation.constraints.NotBlank.message}", "must not be blank")
+                    );
+
+        user.setId("123");
+        violations = validator.validate(user, NewEntityValidationGroup.class);
+        assertThat(
+                violations.stream().map(it -> tuple(it.getPropertyPath().toString(), it.getMessageTemplate(), it.getMessage()))
+        ).containsExactlyInAnyOrder(
+                tuple("id", "must be null or empty string", "must be null or empty string"),
+                tuple("plainPassword", "password is too weak", "password is too weak"),
+                tuple("password","{javax.validation.constraints.NotBlank.message}","must not be blank"),
+                tuple("username", "{javax.validation.constraints.NotBlank.message}", "must not be blank"),
+                tuple("displayName", "{javax.validation.constraints.NotBlank.message}", "must not be blank")
+        );
     }
 
+    @Test
+    void test_update_user_validate(){
+        Locale.setDefault(Locale.ENGLISH);
+        User user = new User();
+        Set<ConstraintViolation<User>> violations = validator.validate(user, UpdateEntityValidationGroup.class);
+        assertThat(
+                violations.stream().map(it -> tuple(it.getPropertyPath().toString(), it.getMessageTemplate(), it.getMessage()))
+        ).containsExactlyInAnyOrder(
+                tuple("id", "{javax.validation.constraints.NotBlank.message}", "must not be blank"),
+                tuple("username", "{javax.validation.constraints.NotBlank.message}", "must not be blank"),
+                tuple("displayName", "{javax.validation.constraints.NotBlank.message}", "must not be blank")
+        );
 
-
+    }
 }

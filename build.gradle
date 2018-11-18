@@ -54,7 +54,7 @@ allprojects {
 configure(findProjects(javaApps)) {
     apply plugin: 'java'
     apply plugin: 'maven'
-    apply plugin: 'groovy'
+//    apply plugin: 'groovy'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.gorylenko.gradle-git-properties'
     apply plugin: 'io.franzbecker.gradle-lombok'
@@ -120,8 +120,8 @@ configure(findProjects(javaApps)) {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
         dependencies {
-            dependency 'org.codehaus.groovy:groovy-all:2.4.15'
-            dependency 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
+//            dependency 'org.codehaus.groovy:groovy-all:2.4.15'
+//            dependency 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
         }
     }
 }
@@ -178,11 +178,11 @@ configure(findProjects(bootApps)){
         testImplementation('org.springframework.boot:spring-boot-starter-test'){
             exclude group:'junit', module:'junit'
         }
-        testImplementation('org.codehaus.groovy:groovy-all')
+//        testImplementation('org.codehaus.groovy:groovy-all')
         testImplementation('org.junit.jupiter:junit-jupiter-api')
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation('org.springframework.security:spring-security-test')
-        testImplementation('io.github.http-builder-ng:http-builder-ng-core')
+//        testImplementation('io.github.http-builder-ng:http-builder-ng-core')
         testImplementation project(':common-tests')
 
     }

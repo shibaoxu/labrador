@@ -3,12 +3,13 @@ package com.labrador.accountservice.api;
 import com.labrador.accountservice.entity.User;
 import com.labrador.accountservice.service.UserService;
 import com.labrador.accountservice.service.UserValidator;
+import com.labrador.commons.entity.validation.NewEntityValidationGroup;
+import com.labrador.commons.entity.validation.UpdateEntityValidationGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -27,9 +28,13 @@ public class UserController {
     }
 
     @PostMapping
-    public String add(@Valid User user) {
-        System.out.println("add new user");
-        return "============";
+    public User create(@Validated(NewEntityValidationGroup.class) User newUser) {
+        return userService.create(newUser);
+    }
+
+    @PutMapping
+    public Optional<User> update(@Validated(UpdateEntityValidationGroup.class) User user){
+        return userService.update(user);
     }
 
     @GetMapping("{id}")

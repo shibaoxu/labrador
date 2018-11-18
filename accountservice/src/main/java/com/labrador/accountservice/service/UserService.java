@@ -37,14 +37,17 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public void add(User newUser){
-
+    @Transactional(readOnly = false)
+    public User create(User newUser){
+        return userRepository.save(newUser);
     }
 
-    public void update(User modifiedUser){
-
+    @Transactional(readOnly = false)
+    public Optional<User> update(User modifiedUser){
+        return userRepository.update(modifiedUser);
     }
 
+    @Transactional(readOnly = false)
     public void delete(String id){
 
     }

@@ -1,7 +1,7 @@
 package com.labrador.accountservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.labrador.commons.db.EntityWithUUID;
+import com.labrador.commons.entity.EntityWithUUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 

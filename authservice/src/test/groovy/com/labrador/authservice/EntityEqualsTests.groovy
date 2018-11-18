@@ -4,7 +4,6 @@ import com.labrador.authservice.entity.User
 import com.labrador.commons.db.EntityWithUUID
 import org.junit.jupiter.api.Test
 
-
 import static org.assertj.core.api.Assertions.assertThat
 
 class EntityEqualsTests {

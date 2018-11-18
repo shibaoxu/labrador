@@ -12,3 +12,5 @@ spring:
   h2:
     console:
       enabled: true
+  messages:
+    basename: messages, ValidationMessges, classpath*:ValidationMessages
