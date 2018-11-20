@@ -4,19 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.labrador.accountservice.entity.validation.PasswordStrength;
 import com.labrador.commons.entity.EntityWithUUID;
 import com.labrador.commons.entity.validation.NewEntityValidationGroup;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -43,18 +39,21 @@ public class User extends EntityWithUUID{
     @Transient
     @JsonIgnore
     @PasswordStrength(groups = NewEntityValidationGroup.class)
+    @ToString.Exclude
     private String plainPassword;
 
     @Column(updatable = false)
     @NotBlank(groups = NewEntityValidationGroup.class)
     @JsonIgnore
+    @ToString.Exclude
     private String password;
 
     @AssertTrue(groups = NewEntityValidationGroup.class)
     private boolean enabled = true;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Role> roles = new ArrayList<>();
+    @ToString.Exclude
+    private Set<Role> roles = new HashSet<>();
 
     public User(String username, String displayName, String plainPassword){
         this.username = username;

@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import com.labrador.accountservice.utils.MockMvcTestUtils;
 import com.labrador.commontests.SpringProfileActive;
+import net.minidev.json.JSONArray;
 import org.assertj.core.api.AbstractInstantAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,12 +20,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,7 +40,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
     private final static String USER_BASE_URL = "/api/users";
+    private final static String ID_OF_ROLE_USER = "2d2994219a14476eba13c5036ecda147";
+    private final static String ID_OF_ROLE_ADMIN = "f2a26d2090624570b6bb630ab546c98f";
+    private final static String ID_OF_ROLE_SALES = "f2a26d2090624570b6bb630ab546c99f";
     private final static String ID_OF_USER = "297eaf7d508ebfe001508ebfefd20000";
+    private final static String ID_OF_NONEXIST = "ID_OF_NON_EXIST";
     private final static String USERNAME_OF_USER = "user";
     private final static String DISPLAY_NAME_OF_USER = "张三";
 
@@ -255,7 +261,7 @@ public class UserControllerTest {
         rows = JdbcTestUtils.countRowsInTable(jdbcTemplate, "users");
         assertThat(rows).isEqualTo(4);
 
-        Map<String, Object> resp = JsonPath.parse(result.andReturn().getResponse().getContentAsString()).read("$");
+        Map<String, Object> resp = MockMvcTestUtils.parseResponseToMap(result);
         assertThat(resp)
                 .containsOnlyKeys("id", "username", "displayName", "enabled", "roles", "createdDate", "createdBy", "lastModifiedDate", "lastModifiedBy")
                 .containsEntry("username", "newuser")
@@ -295,8 +301,7 @@ public class UserControllerTest {
                 "users_id='" + ID_OF_USER + "'");
         assertThat(rowCount).isEqualTo(1);
 
-        ReadContext context = JsonPath.parse(result.andReturn().getResponse().getContentAsString());
-        Map<String, Object> resp = context.read("$");
+        Map<String, Object> resp = MockMvcTestUtils.parseResponseToMap(result);
         assertThat(resp)
                 .containsEntry("id", ID_OF_USER)
                 .containsEntry("username", "user")
@@ -309,6 +314,10 @@ public class UserControllerTest {
         assertThat(Instant.parse(resp.get("lastModifiedDate").toString()))
                 .isBefore(Instant.now())
                 .isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS));
+
+        JSONArray roles = (JSONArray) resp.get("roles");
+        List<String> roleNames = roles.stream().map(it -> ((Map<String, Object>) it).get("name").toString()).collect(Collectors.toList());
+        assertThat(roleNames).containsExactly("ROLE_USER");
     }
 
     @Test
@@ -329,10 +338,58 @@ public class UserControllerTest {
     }
 
     @Test
+    @DirtiesContext
+    void test_assign_to_roles_success() throws Exception {
+        assignToRoles(ID_OF_USER, ID_OF_ROLE_ADMIN, ID_OF_ROLE_SALES).andExpect(status().isOk());
+        assertThat(isUserAssignedToRole(ID_OF_USER, ID_OF_ROLE_ADMIN)).isTrue();
+        assertThat(isUserAssignedToRole(ID_OF_USER, ID_OF_ROLE_SALES)).isTrue();
+    }
+
+    @Test
+    void test_assign_to_exist_role_success() throws Exception {
+        assignToRoles(ID_OF_USER, ID_OF_ROLE_ADMIN, ID_OF_ROLE_USER).andExpect(status().isOk());
+        assertThat(isUserAssignedToRole(ID_OF_USER, ID_OF_ROLE_ADMIN)).isTrue();
+        assertThat(isUserAssignedToRole(ID_OF_USER, ID_OF_ROLE_USER)).isTrue();
+    }
+
+    @Test
+    void test_assign_to_roles_validate_failure() throws Exception{
+        ResultActions actions = assignToRoles(ID_OF_NONEXIST, ID_OF_ROLE_SALES).andExpect(status().isBadRequest());
+        Map<String, Object> resp = MockMvcTestUtils.parseResponseToMap(actions);
+        assertThat(resp)
+                .containsEntry("message", "unable find the entity")
+                .containsEntry("details", "unable find com.labrador.accountservice.entity.User with id ID_OF_NON_EXIST");
+    }
+
+    @Test
+    void test_assign_to_roles_with_empty_params() throws Exception{
+        ResultActions actions = mockMvc.perform(
+                put(USER_BASE_URL + "/assignToRoles")
+        ).andExpect(status().isBadRequest());
+        System.out.println(actions.andReturn().getResponse().getContentAsString());
+    }
+
+    @Test
     void testGetUserById() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/api/users/297eaf7d508ebfe001508ebfefd20000")
         );
         System.out.println(result.andReturn().getResponse().getContentAsString());
+    }
+
+    private ResultActions assignToRoles(String userId, String... roleIds) throws Exception{
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("userId", userId);
+        for(String roleId : roleIds){
+            params.add("roleId", roleId);
+        }
+        return mockMvc.perform(
+                put(USER_BASE_URL + "/assignToRoles")
+                        .params(params)
+        );
+    }
+
+    private boolean isUserAssignedToRole(String userId, String roleId){
+        return JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users_roles", String.format("users_id='%s' and roles_id='%s'", userId, roleId)) == 1;
     }
 }

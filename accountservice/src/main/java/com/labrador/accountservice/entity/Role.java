@@ -2,10 +2,7 @@ package com.labrador.accountservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.labrador.commons.entity.EntityWithUUID;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -33,6 +30,7 @@ public class Role extends EntityWithUUID{
 
     @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonIgnore
+    @ToString.Exclude
     private Set<User> users = new HashSet<>();
 
     public void removeAllUser(){

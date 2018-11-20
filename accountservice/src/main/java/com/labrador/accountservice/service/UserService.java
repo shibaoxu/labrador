@@ -1,6 +1,8 @@
 package com.labrador.accountservice.service;
 
+import com.labrador.accountservice.entity.Role;
 import com.labrador.accountservice.entity.User;
+import com.labrador.accountservice.repository.RoleRepository;
 import com.labrador.accountservice.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -20,6 +24,9 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     public Page<User> findAll(@NonNull Pageable pageable){
         return userRepository.findAll(pageable);
@@ -56,11 +63,19 @@ public class UserService {
 
     }
 
-    public void assignUserToRole(String userId, String roleId){
-
+    @Transactional(readOnly = false)
+    public void assignToRole(String userId, String... roleIds){
+        try {
+            User user = userRepository.getOne(userId);
+            List<Role> roles = roleRepository.findAllByIdIn(roleIds);
+            user.getRoles().addAll(roles);
+            userRepository.save(user);
+        } catch (EntityNotFoundException ex){
+            throw new com.labrador.accountservice.exception.EntityNotFoundException(User.class.getName(), userId);
+        }
     }
 
-    public void removeUserFormRole(String userId, String roleId){
+    public void removeFormRoles(String userId, String roleId){
 
     }
 

@@ -5,6 +5,7 @@ import com.labrador.accountservice.service.UserService;
 import com.labrador.accountservice.service.UserValidator;
 import com.labrador.commons.entity.validation.NewEntityValidationGroup;
 import com.labrador.commons.entity.validation.UpdateEntityValidationGroup;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -37,10 +38,16 @@ public class UserController {
         return userService.update(user);
     }
 
+    @PutMapping("assignToRoles")
+    public void assignToRoles(@RequestParam("userId") @NonNull String userId, @RequestParam("roleId") @NonNull String... rolesIds){
+        userService.assignToRole(userId, rolesIds);
+    }
+
     @GetMapping("{id}")
     public Optional<User> get(@PathVariable String id) {
         return userService.find(id);
     }
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder){

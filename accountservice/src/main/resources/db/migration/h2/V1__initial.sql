@@ -121,6 +121,7 @@ VALUES ('297eaf7d508ebfe001508ebff0aa0001', '系统管理员', 1, 'admin', '{bcr
 
 INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('2d2994219a14476eba13c5036ecda147', 'ROLE_USER', '普通用户', 'system', 'system', '2018-07-31T15:49:56.985Z','2018-07-31T15:49:56.985Z');
 INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c98f', 'ROLE_ADMIN', '系统管理员', 'system', 'system', '2018-07-31T15:49:56.985Z','2018-07-31T15:49:56.985Z');
+INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c99f', 'ROLE_SALES', '销售', 'system', 'system', '2018-07-31T15:49:56.985Z','2018-07-31T15:49:56.985Z');
 
 INSERT into users_roles(roles_id, users_id)
 VALUES ('2d2994219a14476eba13c5036ecda147', '297eaf7d508ebfe001508ebfefd20000');

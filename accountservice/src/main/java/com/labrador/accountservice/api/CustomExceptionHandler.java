@@ -29,7 +29,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({EntityNotFoundException.class, Exception.class})
     public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex,  WebRequest request){
-        System.out.println(ex.getLocalizedMessage());
         return new ResponseEntity<>(new EntityNotFoundErrorAttributes(ex, request, messageSource), null, HttpStatus.BAD_REQUEST);
     }
 }
