@@ -32,7 +32,7 @@ public class User extends EntityWithUUID{
     @EqualsAndHashCode.Include
     private String username;
 
-    @Length(min = 3, max = 50)
+    @Length(max = 50)
     @NotBlank
     private String displayName;
 

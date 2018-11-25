@@ -2,13 +2,16 @@ package com.labrador.accountservice.service;
 
 import com.labrador.accountservice.entity.Role;
 import com.labrador.accountservice.entity.User;
+import com.labrador.accountservice.exception.BusinessException;
+import com.labrador.accountservice.exception.ResourceNotFoundException;
 import com.labrador.accountservice.repository.RoleRepository;
 import com.labrador.accountservice.repository.UserRepository;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.lang.NonNull;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -22,64 +25,112 @@ import java.util.Optional;
 @Slf4j
 @Transactional(readOnly = true)
 public class UserService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private RoleRepository roleRepository;
 
-    public Page<User> findAll(@NonNull Pageable pageable){
+    public Page<User> findAll(@NonNull Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
-    public Page<User> findAll(String condition, Pageable pageable){
-        if (!StringUtils.hasText(condition)) {
+    public Page<User> findAll(String criteria, @NonNull Pageable pageable) {
+        if (!StringUtils.hasText(criteria)) {
             return findAll(pageable);
-        }else{
-            return userRepository.findAll(condition, pageable);
+        } else {
+            return userRepository.findAll(criteria, pageable);
         }
     }
 
-    public Optional<User> find(String id){
-        return userRepository.findById(id);
+    public User get(@NonNull String id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> {
+                    log.warn("getting an nonexistent user with id:{}", id);
+                    return new ResourceNotFoundException(User.class.getName(), "id=" + id);
+                }
+        );
+    }
+
+    public User getByUsername(@NonNull String username){
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new ResourceNotFoundException(User.class.getName(), "username=" + username)
+        );
     }
 
     @Transactional(readOnly = false)
-    public User create(User newUser){
+    public User create(@NonNull User newUser) {
         return userRepository.save(newUser);
     }
 
     @Transactional(readOnly = false)
-    public Optional<User> update(User modifiedUser){
+    public Optional<User> update(@NonNull User modifiedUser) {
         return userRepository.update(modifiedUser);
     }
 
     @Transactional(readOnly = false)
-    public void delete(String id){
-
-    }
-
-    public void disable(String id){
-
+    public void delete(@NonNull String id) {
+        try{
+            userRepository.delete(userRepository.getOne(id));
+        } catch (EntityNotFoundException ex){
+            log.warn("deleting a nonexistent user");
+        }
     }
 
     @Transactional(readOnly = false)
-    public void assignToRole(String userId, String... roleIds){
+    public void disableOrEnable(String id, boolean isEnable) {
+        try{
+            User user = userRepository.getOne(id);
+            user.setEnabled(isEnable);
+            userRepository.save(user);
+        }catch (EntityNotFoundException ex){
+            log.warn("disable/enable a nonexistent user");
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void assignToRoles(String userId, String... roleIds) {
         try {
             User user = userRepository.getOne(userId);
             List<Role> roles = roleRepository.findAllByIdIn(roleIds);
             user.getRoles().addAll(roles);
             userRepository.save(user);
-        } catch (EntityNotFoundException ex){
+        } catch (EntityNotFoundException ex) {
+            log.warn("unable get the user with id {}", userId);
             throw new com.labrador.accountservice.exception.EntityNotFoundException(User.class.getName(), userId);
         }
     }
 
-    public void removeFormRoles(String userId, String roleId){
-
+    @Transactional(readOnly = false)
+    public void removeFromRoles(@NonNull String userId, @NonNull String... roleIds) {
+        try {
+            User user = userRepository.getOne(userId);
+            List<Role> roles = roleRepository.findAllByIdIn(roleIds);
+            user.getRoles().removeAll(roles);
+            userRepository.save(user);
+        } catch (EntityNotFoundException ex) {
+            log.warn("unable get the user with id {}", userId);
+            throw new com.labrador.accountservice.exception.EntityNotFoundException(User.class.getName(), userId);
+        }
     }
 
-    public void changePassword(String oldPassword, String newPassword){
-
+    @Transactional(readOnly = false)
+    public void changePassword(@NonNull String userId, @NonNull String oldPassword, @NonNull String newPassword) {
+        try {
+            User user = userRepository.getOne(userId);
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                userRepository.changePassword(userId, passwordEncoder.encode(newPassword));
+            } else {
+                log.warn("the old password is incorrect");
+                throw new BusinessException("user.password.notmatch");
+            }
+        } catch (EntityNotFoundException ex) {
+            log.warn("unable get the user with id {}", userId);
+            throw new com.labrador.accountservice.exception.EntityNotFoundException(User.class.getName(), userId);
+        }
     }
 }

@@ -20,11 +20,13 @@ public class ErrorAttributes {
     private HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     private String message;
     private String path;
+    private String httpMethod;
     private Object details = null;
 
     public ErrorAttributes(HttpStatus status, WebRequest request){
         this.httpStatus = status;
         this.path = ((ServletWebRequest) request).getRequest().getServletPath();
+        this.httpMethod = ((ServletWebRequest) request).getHttpMethod().name();
     }
 
     @JsonGetter("error")

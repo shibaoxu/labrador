@@ -1,7 +1,6 @@
 package com.labrador.accountservice.repository;
 
 import com.labrador.accountservice.entity.User;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,33 +25,35 @@ public interface UserRepository extends JpaRepository<User, String> {
     @EntityGraph(attributePaths = {"roles"})
     Page<User> findAllByUsernameContainingOrDisplayNameContaining(String username, String displayName, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"roles"})
     Optional<User> findByUsername(String username);
 
-    default Page<User> findAll(String condition, Pageable pageable){
-        if (!StringUtils.hasText(condition)) {
+    @EntityGraph(attributePaths = {"roles"})
+    default Page<User> findAll(String criteria, Pageable pageable) {
+        if (!StringUtils.hasText(criteria)) {
             return findAll(pageable);
-        }else {
-            return findAllByUsernameContainingOrDisplayNameContaining(condition, condition, pageable);
+        } else {
+            return findAllByUsernameContainingOrDisplayNameContaining(criteria, criteria, pageable);
         }
     }
 
-//    @Modifying
-//    @Query("update User set displayName= :displayName, enabled = :enabled where id = :id")
-//    int update(
-//            @Param("id") String id,
-//            @Param("displayName") String displayName,
-//            @Param("enabled") boolean enabled);
-
-    default Optional<User> update(User user){
+    @EntityGraph(attributePaths = {"roles"})
+    default Optional<User> update(User user) {
         try {
             User originnUser = getOne(user.getId());
             originnUser.setDisplayName(user.getDisplayName());
             originnUser.setEnabled(user.isEnabled());
             return Optional.of(save(originnUser));
-        } catch (EntityNotFoundException ex){
+        } catch (EntityNotFoundException ex) {
             Logger logger = LoggerFactory.getLogger(UserRepository.class.getName());
             logger.warn("try update a nonexist user with id {}", user.getId());
             throw new com.labrador.accountservice.exception.EntityNotFoundException(user.getClass().getName(), user.getId());
         }
     }
+
+    @Modifying
+    @Query("update User set password = :password where id = :id")
+    int changePassword(
+            @Param("id") String userId,
+            @Param("password") String password);
 }

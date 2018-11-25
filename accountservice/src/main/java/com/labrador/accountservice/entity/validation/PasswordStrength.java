@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Repeatable(PasswordStrength.List.class)
 public @interface PasswordStrength {
 
-    String message() default "password is too weak";
+    String message() default "{PasswordStrength}";
     int min() default 6;
     int max() default 20;
     int upperCase() default 1;
