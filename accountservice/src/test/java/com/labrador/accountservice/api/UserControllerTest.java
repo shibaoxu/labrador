@@ -3,6 +3,7 @@ package com.labrador.accountservice.api;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import com.labrador.accountservice.entity.User;
+import com.labrador.accountservice.utils.JsonPathAssert;
 import com.labrador.accountservice.utils.MockMvcTestUtils;
 import com.labrador.commontests.SpringProfileActive;
 import net.minidev.json.JSONArray;
@@ -32,7 +33,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
+import static com.labrador.accountservice.utils.LabradorAssertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -555,15 +558,29 @@ public class UserControllerTest {
     }
 
     @Test
-    void test_find_all_success() throws Exception{
-        ResultActions actions = findAll(0, 10);
-        actions.andExpect(status().isOk());
+    void test_find_all_not_sort_success() throws Exception{
+        ResultActions actions = findAll(0, 10).andExpect(status().isOk());
         ReadContext ctx = JsonPath.parse(actions.andReturn().getResponse().getContentAsString());
-        assertThat(ctx.<Integer>read("$.totalPages")).isEqualTo(3);
-        assertThat(ctx.<Integer>read("$.totalPages")).isEqualTo(23);
-        assertThat(ctx.<Integer>read("$.number")).isEqualTo(0);
+        assertThat(ctx)
+                .hasValue("$.totalPages", 3)
+                .hasValue("$.totalElements", 23)
+                .hasValue("$.number", 0)
+                .hasValue("$.size", 10)
+                .isFalse("$.sort.sorted")
+                .isTrue("$.sort.unsorted")
+                .hasSize("$.content", 10);
+    }
+
+    @Test
+    void test_find_all_sorted_by_username_desc_success() throws Exception {
+        ResultActions actions = findAll(0, 5, "username,desc").andExpect(status().isOk());
+        ReadContext ctx = JsonPath.parse(actions.andReturn().getResponse().getContentAsString());
+        assertThat(ctx)
+                .contains("$.content[*].username",
+                        "user", "test-user-k", "test-user-j", "test-user-i", "test-user-h");
 
     }
+
     private ResultActions assignToRoles(String userId, String... roleIds) throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("userId", userId);
@@ -627,6 +644,10 @@ public class UserControllerTest {
         return mockMvc.perform(
                 get(USER_BASE_URL).params(params)
         );
+    }
+
+    private ResultActions findAllUsingCriteria(int page, int size, String criteria, String... sorts){
+
     }
 
     private List<Tuple> extractParameterValidateError(List<Map<String, Object>> details) {
