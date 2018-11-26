@@ -3,7 +3,6 @@ package com.labrador.accountservice.api;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import com.labrador.accountservice.entity.User;
-import com.labrador.accountservice.utils.JsonPathAssert;
 import com.labrador.accountservice.utils.MockMvcTestUtils;
 import com.labrador.commontests.SpringProfileActive;
 import net.minidev.json.JSONArray;
@@ -30,7 +29,9 @@ import org.springframework.util.MultiValueMap;
 import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.labrador.accountservice.utils.LabradorAssertions.assertThat;
@@ -572,6 +573,34 @@ public class UserControllerTest {
     }
 
     @Test
+    void test_find_all_by_criteria_success() throws Exception{
+        ResultActions actions = findAllUsingCriteria(0, 10, "test", "username,desc").andExpect(status().isOk());
+        ReadContext ctx = JsonPath.parse(actions.andReturn().getResponse().getContentAsString());
+
+        assertThat(ctx).hasSize("$.content", 10);
+
+        List<Map<String, Object>> users = ctx.read("$.content");
+        assertThat(users).allMatch((it) -> it.get("username").toString().contains("test") || it.get("displayName").toString().contains("test"));
+    }
+
+    @Test
+    void test_find_all_with_no_parameter_success() throws Exception{
+        ResultActions actions = mockMvc.perform(
+                get(USER_BASE_URL)
+        ).andExpect(status().isOk());
+
+        ReadContext ctx = JsonPath.parse(actions.andReturn().getResponse().getContentAsString());
+        assertThat(ctx)
+                .hasSize("$.content", 20)
+                .hasValue("$.size", 20)
+                .hasValue("$.totalPages", 2)
+                .hasValue("$.totalElements", 23)
+                .hasValue("$.number", 0)
+                .isFalse("$.sort.sorted")
+                .isTrue("$.sort.unsorted");
+
+    }
+    @Test
     void test_find_all_sorted_by_username_desc_success() throws Exception {
         ResultActions actions = findAll(0, 5, "username,desc").andExpect(status().isOk());
         ReadContext ctx = JsonPath.parse(actions.andReturn().getResponse().getContentAsString());
@@ -646,8 +675,18 @@ public class UserControllerTest {
         );
     }
 
-    private ResultActions findAllUsingCriteria(int page, int size, String criteria, String... sorts){
+    private ResultActions findAllUsingCriteria(int page, int size, String criteria, String... sorts) throws Exception{
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("page", String.valueOf(page));
+        params.add("size", String.valueOf(size));
+        params.add("criteria", criteria);
+        for(String sort : sorts){
+            params.add("sort", sort);
+        }
 
+        return mockMvc.perform(
+                get(USER_BASE_URL).params(params)
+        );
     }
 
     private List<Tuple> extractParameterValidateError(List<Map<String, Object>> details) {

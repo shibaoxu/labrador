@@ -70,12 +70,13 @@ public class UserController {
         return userService.getByUsername(username);
     }
 
-    @GetMapping(params = {"!username"})
+//    @GetMapping(params = {"!username", "!criteria"})
+    @GetMapping
     public Page<User> findAll(@NonNull Pageable pageable){
         return userService.findAll(pageable);
     }
 
-    @GetMapping
+    @GetMapping(params = {"criteria"})
     public Page<User> findAll(@RequestParam("criteria") String criteria, @NonNull Pageable pageable){
         return userService.findAll(criteria, pageable);
     }
