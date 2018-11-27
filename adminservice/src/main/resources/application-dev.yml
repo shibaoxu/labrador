@@ -3,7 +3,6 @@ server:
 eureka:
   client:
     enabled: false
-
 spring:
   datasource:
     url: jdbc:h2:~/labrador-account;AUTO_SERVER=TRUE

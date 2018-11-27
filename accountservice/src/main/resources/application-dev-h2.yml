@@ -6,7 +6,6 @@ eureka:
 
 spring:
   datasource:
-#    url: jdbc:h2:~/labrador-account;AUTO_SERVER=TRUE
     username: sa
     password: newtouch
   h2:
@@ -14,3 +13,5 @@ spring:
       enabled: true
   messages:
     basename: messages, ValidationMessges, classpath*:ValidationMessages
+  flyway:
+    locations: classpath:db/migration/{vendor}

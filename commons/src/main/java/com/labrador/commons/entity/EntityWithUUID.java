@@ -13,11 +13,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * Created by shibaoxu on 2017/3/10.
@@ -35,11 +37,12 @@ public class EntityWithUUID {
     private String id;
 
     @Column(updatable = false)
+    @DateTimeFormat()
     @CreatedDate
-    private Instant createdDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
-    private Instant lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     @Column(updatable = false)
     @CreatedBy

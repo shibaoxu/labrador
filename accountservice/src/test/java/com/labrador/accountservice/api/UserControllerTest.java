@@ -28,6 +28,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.UnsupportedEncodingException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
@@ -282,10 +283,10 @@ public class UserControllerTest {
                 .containsEntry("createdBy", "anonymousUser")
                 .containsEntry("lastModifiedBy", "anonymousUser");
         assertThat(resp.get("id").toString()).isNotBlank();
-        assertThat(Instant.parse(resp.get("createdDate").toString()))
-                .isEqualTo(Instant.parse(resp.get("lastModifiedDate").toString()))
-                .isBefore(Instant.now())
-                .isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS));
+        assertThat(LocalDateTime.parse(resp.get("createdDate").toString()))
+                .isEqualTo(LocalDateTime.parse(resp.get("lastModifiedDate").toString()))
+                .isBefore(LocalDateTime.now())
+                .isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
     }
 
     @Test
@@ -319,14 +320,16 @@ public class UserControllerTest {
                 .containsEntry("displayName", "modified-displayname")
                 .containsEntry("enabled", false)
                 .containsEntry("createdBy", "297eaf7d508ebfe001508ebff0aa0001")
-                .containsEntry("createdDate", "2018-07-31T15:49:56.985Z")
+                .containsEntry("createdDate", "2018-07-31T15:49:56.985")
                 .containsEntry("lastModifiedBy", "anonymousUser")
                 .containsKeys("lastModifiedDate");
-        assertThat(Instant.parse(resp.get("lastModifiedDate").toString()))
-                .isBefore(Instant.now())
-                .isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS));
+        assertThat(LocalDateTime.parse(resp.get("lastModifiedDate").toString()))
+                .isBefore(LocalDateTime.now())
+                .isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
 
         JSONArray roles = (JSONArray) resp.get("roles");
+
+        @SuppressWarnings("unchecked")
         List<String> roleNames = roles.stream().map(it -> ((Map<String, Object>) it).get("name").toString()).collect(Collectors.toList());
         assertThat(roleNames).containsExactly("ROLE_USER", "ROLE_SALES");
     }
@@ -465,6 +468,7 @@ public class UserControllerTest {
                 .containsEntry("error", HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .containsEntry("message", "request parameter validate failure");
 
+        @SuppressWarnings("unchecked")
         List<Map<String, Object>> details = (List<Map<String, Object>>) resp.get("details");
         List<Tuple> paramErrors = details.stream().map(it -> tuple(
                 it.get("className"),
@@ -541,6 +545,8 @@ public class UserControllerTest {
         Map<String, Object> resp = MockMvcTestUtils.parseResponseToMap(actions);
         assertThat(resp).containsEntry("status", HttpStatus.BAD_REQUEST.value())
                 .containsEntry("message", "request parameter validate failure");
+
+        @SuppressWarnings("unchecked")
         List<Map<String, Object>> details = (List<Map<String, Object>>) resp.get("details");
         assertThat(extractParameterValidateError(details))
                 .containsExactly(tuple(
@@ -718,6 +724,7 @@ public class UserControllerTest {
                 .containsEntry("displayName", DISPLAY_NAME_OF_USER)
                 .containsEntry("enabled", ENABLE_OF_USER);
 
+        @SuppressWarnings("unchecked")
         List<Map<String, Object>> roles = (List<Map<String, Object>>) resp.get("roles");
         assertThat(roles.stream().map(it -> tuple(it.get("id"), it.get("name"))).collect(Collectors.toList()))
                 .containsExactlyInAnyOrder(

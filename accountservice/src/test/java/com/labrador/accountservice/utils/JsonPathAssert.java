@@ -53,7 +53,8 @@ public class JsonPathAssert extends AbstractAssert<JsonPathAssert, ReadContext> 
         return this;
     }
 
-    public <T>JsonPathAssert contains(String path, T... values){
+    @SafeVarargs
+    public final <T> JsonPathAssert contains(String path, T... values){
         List<T> actuals = actual.read(path);
         if (!actuals.containsAll(Arrays.asList(values))){
             failWithMessage("Expected values are not all contained in the value of %s", path);

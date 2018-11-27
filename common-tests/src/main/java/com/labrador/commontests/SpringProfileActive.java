@@ -7,7 +7,12 @@ import org.springframework.util.StringUtils;
 public class SpringProfileActive implements ActiveProfilesResolver {
     @Override
     public String[] resolve(Class<?> aClass) {
-        final String activeProfile = System.getProperty("spring.profiles.active");
-        return new String[]{!StringUtils.hasLength(activeProfile) || activeProfile.equals("compose")? "test" : activeProfile};
+        final String jvmProfile = System.getProperty("spring.profiles.active");
+        final String envProfile = System.getenv("SPRING_PROFILES.ACTIVE");
+        final String defaultProfile = "dev-h2";
+
+        if (StringUtils.hasText(jvmProfile)) return new String[]{jvmProfile};
+        if (StringUtils.hasText(envProfile)) return new String[]{envProfile};
+        return new String[]{defaultProfile};
     }
 }

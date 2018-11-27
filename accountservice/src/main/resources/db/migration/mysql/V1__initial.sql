@@ -1,5 +1,3 @@
--- used in tests that use HSQL
--- oauth2 schema
 create table oauth_client_details (
   client_id VARCHAR(256) PRIMARY KEY,
   resource_ids VARCHAR(256),
@@ -16,7 +14,7 @@ create table oauth_client_details (
 
 create table oauth_client_token (
   token_id VARCHAR(256),
-  token LONGVARBINARY,
+  token BLOB,
   authentication_id VARCHAR(256) PRIMARY KEY,
   user_name VARCHAR(256),
   client_id VARCHAR(256)
@@ -24,31 +22,31 @@ create table oauth_client_token (
 
 create table oauth_access_token (
   token_id VARCHAR(256),
-  token LONGVARBINARY,
+  token BLOB,
   authentication_id VARCHAR(256) PRIMARY KEY,
   user_name VARCHAR(256),
   client_id VARCHAR(256),
-  authentication LONGVARBINARY,
+  authentication BLOB,
   refresh_token VARCHAR(256)
 );
 
 create table oauth_refresh_token (
   token_id VARCHAR(256),
-  token LONGVARBINARY,
-  authentication LONGVARBINARY
+  token BLOB,
+  authentication BLOB
 );
 
 create table oauth_code (
-  code VARCHAR(256), authentication LONGVARBINARY
+  code VARCHAR(256), authentication BLOB
 );
 
 create table oauth_approvals (
-  userId VARCHAR(256),
-  clientId VARCHAR(256),
-  scope VARCHAR(256),
-  status VARCHAR(10),
-  expiresAt TIMESTAMP,
-  lastModifiedAt TIMESTAMP
+	userId VARCHAR(256),
+	clientId VARCHAR(256),
+	scope VARCHAR(256),
+	status VARCHAR(10),
+	expiresAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	lastModifiedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -66,15 +64,17 @@ create table ClientDetails (
   additionalInformation VARCHAR(4096),
   autoApproveScopes VARCHAR(256)
 );
+
+
 -- user schema
 CREATE TABLE users (
-  id nvarchar(255) NOT NULL,
+  id VARCHAR(40) NOT NULL,
   username varchar(255) DEFAULT NULL,
   password varchar(255) DEFAULT NULL,
   display_name varchar(255) DEFAULT NULL,
   enabled bit(1) NOT NULL,
-  created_date TIMESTAMP NOT NULL ,
-  last_modified_date TIMESTAMP NOT NULL ,
+  created_date datetime(3) NOT NULL ,
+  last_modified_date datetime(3) NOT NULL ,
   last_modified_by VARCHAR(50) NOT NULL ,
   created_by VARCHAR(50) NOT NULL ,
   version INT DEFAULT 0,
@@ -86,8 +86,8 @@ CREATE TABLE roles(
   id VARCHAR(40) not null,
   name VARCHAR(50) not null,
   description VARCHAR(50) not null,
-  created_date TIMESTAMP not null,
-  last_modified_date TIMESTAMP not null ,
+  created_date datetime(3) NOT NULL ,
+  last_modified_date datetime(3) NOT NULL ,
   last_modified_by VARCHAR(50) not NULL,
   created_by VARCHAR(50) not NULL,
   version INT DEFAULT 0,
@@ -98,16 +98,16 @@ CREATE TABLE roles(
 
 create table users_roles(
   users_id VARCHAR(40) not null,
-  roles_id VARCHAR(40) not null,
+  roles_id VARCHAR(40) not null
 );
 
 ALTER TABLE users_roles
-	ADD FOREIGN KEY (ROLES_ID)
-	REFERENCES ROLES (ID);
+  ADD FOREIGN KEY (roles_id)
+REFERENCES roles (id);
 
 ALTER TABLE users_roles
-	ADD FOREIGN KEY (USERS_ID)
-	REFERENCES USERS (ID);
+  ADD FOREIGN KEY (users_id)
+REFERENCES users (id);
 
 
 INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
@@ -161,9 +161,9 @@ VALUES ('297eaf7d508ebfe001508ebfefd20029','test-user-j', 1, 'test-user-j', '{bc
 INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
 VALUES ('297eaf7d508ebfe001508ebfefd20030','test-user-k', 1, 'test-user-k', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
 
-INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('2d2994219a14476eba13c5036ecda147', 'ROLE_USER', '普通用户', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
-INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c98f', 'ROLE_ADMIN', '系统管理员', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
-INSERT INTO ROLES (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c99f', 'ROLE_SALES', '销售', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
+INSERT INTO roles (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('2d2994219a14476eba13c5036ecda147', 'ROLE_USER', '普通用户', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
+INSERT INTO roles (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c98f', 'ROLE_ADMIN', '系统管理员', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
+INSERT INTO roles (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c99f', 'ROLE_SALES', '销售', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
 
 INSERT into users_roles(roles_id, users_id)
 VALUES ('2d2994219a14476eba13c5036ecda147', '297eaf7d508ebfe001508ebfefd20000');
