@@ -37,7 +37,6 @@ public class EntityWithUUID {
     private String id;
 
     @Column(updatable = false)
-    @DateTimeFormat()
     @CreatedDate
     private LocalDateTime createdDate;
 

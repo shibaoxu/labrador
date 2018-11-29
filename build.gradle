@@ -45,15 +45,13 @@ def findProjects(names) {
 
 
 allprojects {
-    apply plugin: 'idea'
-    apply plugin: 'eclipse'
     group = 'com.labrador'
     version = '0.0.1-SNAPSHOT'
 }
 
 configure(findProjects(javaApps)) {
     apply plugin: 'java'
-    apply plugin: 'maven'
+//    apply plugin: 'maven'
 //    apply plugin: 'groovy'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.gorylenko.gradle-git-properties'
@@ -120,8 +118,6 @@ configure(findProjects(javaApps)) {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
         dependencies {
-//            dependency 'org.codehaus.groovy:groovy-all:2.4.15'
-//            dependency 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
         }
     }
 }
@@ -178,13 +174,10 @@ configure(findProjects(bootApps)){
         testImplementation('org.springframework.boot:spring-boot-starter-test'){
             exclude group:'junit', module:'junit'
         }
-//        testImplementation('org.codehaus.groovy:groovy-all')
         testImplementation('org.junit.jupiter:junit-jupiter-api')
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation('org.springframework.security:spring-security-test')
-//        testImplementation('io.github.http-builder-ng:http-builder-ng-core')
         testImplementation project(':common-tests')
-
     }
 }
 
@@ -214,6 +207,7 @@ dockerCompose {
     useComposeFiles = ['./docker/cloud-server-compose.yml']
     startedServices = ['configservice', 'eurekaservice']
 }
+
 String getProp(String propName) {
 	return System.properties[propName] ?:
 			project.gradle.startParameter.systemPropertiesArgs.get(propName) ?:
