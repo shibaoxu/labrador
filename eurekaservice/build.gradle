@@ -3,4 +3,4 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 }
-createDockerTaskWithPort([8761])
+//createDockerTaskWithPort([8761])

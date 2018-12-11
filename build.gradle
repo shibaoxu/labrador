@@ -1,216 +1,40 @@
 buildscript {
-    repositories { 
+    repositories {
         maven {
             url "http://maven.aliyun.com/nexus/content/groups/public/"
         }
-        // jcenter()
-        // mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
     }
-    dependencies {
-        classpath 'se.transmode.gradle:gradle-docker:1.2'
-        classpath "com.avast.gradle:gradle-docker-compose-plugin:0.8.4"
-    }    
+    dependencies{
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21"
+        classpath "io.franzbecker:gradle-lombok:1.14"
+
+    }
 }
 
-plugins {
-    id 'org.springframework.boot' version "2.0.3.RELEASE" apply false
-    id 'io.spring.dependency-management' version "1.0.5.RELEASE" apply false
-    id 'com.gorylenko.gradle-git-properties' version "1.4.21" apply false
-    id 'io.franzbecker.gradle-lombok' version '1.14' apply false
-    id 'org.sonarqube' version '2.6.2'
-    id "com.avast.gradle.docker-compose" version "0.8.4"
+ext{
+    javaApps = [
+            ':authservice',':adminservice', 'accountservice',
+            ':commons', ':common-tests',
+            ':eurekaservice', ':configservice', ':turbineservice', ':zuulservice'
+    ]
+    bootApps = javaApps - ':commons' - ':common-tests'
+    cloudServer = [':eurekaservice', ':configservice', ':turbineservice', ':zuulservice']
+    serviceApps = bootApps - cloudServer
+    jsApps = []
 }
-
-if (System.getenv('SONAR_HOST_URL')) {
-    System.setProperty('sonar.host.url', System.getenv('SONAR_HOST_URL'))
-}
-
-def javaApps = [
-    ':authservice',':adminservice', 'accountservice',
-    ':commons', ':common-tests',
-    ':eurekaservice', ':configservice', ':turbineservice', ':zuulservice'
-]
-
-def bootApps = javaApps - ':commons' - ':common-tests'
-
-def cloudServer = [':eurekaservice', ':configservice', ':turbineservice', ':zuulservice']
-def services = bootApps - cloudServer
-
-def jsApps = [
-]
-
-def findProjects(names) {
-    return names.collect({project(it)})
-}
-
 
 allprojects {
     group = 'com.labrador'
     version = '0.0.1-SNAPSHOT'
 }
 
-configure(findProjects(javaApps)) {
-    apply plugin: 'java'
-//    apply plugin: 'maven'
-//    apply plugin: 'groovy'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'com.gorylenko.gradle-git-properties'
-    apply plugin: 'io.franzbecker.gradle-lombok'
-    apply plugin: 'checkstyle'
-    apply plugin: 'findbugs'
-    apply plugin: 'jacoco'
-    // apply plugin: 'org.sonarqube'
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    
-    
-    
-    tasks.withType(JavaCompile){
-       options.compilerArgs += ["-Xlint:unchecked"]
-    }
-    repositories {
-        maven {
-            url "http://maven.aliyun.com/nexus/content/groups/public/"
-        }
-        mavenCentral()
-    }
-
-
-    lombok {
-        version = "1.18.2"
-        sha256 = ""
-    }
-
-    checkstyle {
-        ignoreFailures = true
-        checkstyleTest.enabled = false
-    }
-
-    findbugs {
-        ignoreFailures = true
-        findbugsTest.enabled = false        
-    }
-    tasks.withType (FindBugs) {
-        reports {
-            xml.enabled false
-            html.enabled true
-        }
-    }
-    jacoco {
-        toolVersion = '0.8.1'
-        reportsDir = file("$buildDir/reports/jacoco")
-    }
-    jacocoTestReport {
-        reports {
-            xml.enabled false
-            csv.enabled false
-            html.destination file("${buildDir}/reports/jacoco/jacocoHtml")
-        }
-    }
-    test {
-        useJUnitPlatform()
-    }    
-
-    dependencyManagement {
-        imports {
-            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        }
-        dependencies {
-        }
-    }
-}
-configure(findProjects(bootApps)){
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'docker'
-
-    bootRun {
-        systemProperties  System.properties
-    }
-
-    test {
-        systemProperty  'spring.profiles.active', System.getProperty('spring.profiles.active')
-    }
-
-    docker {
-        maintainer = 'shibaoxu <shibaoxu@gmail.com>'
-        baseImage = 'openjdk:8u171-jdk-alpine3.8'
-        // registry = 'localhost:5000'
-    }
-    springBoot {
-        buildInfo()
-    }
-    ext {
-        profile = getProp('spring.profiles.active')
-		dockerConfiguration = {ports ->
-            // int debugPort = port - 1000
-            dependsOn 'build'
-            // dryRun true
-            // push true
-            addFile("${libsDir}/${project.name}-${version}.jar", "/${project.name}/${project.name}.jar")
-            workingDir("/$project.name")
-            tagVersion = 'latest'
-            ports.each{
-                exposePort(it)
-            }
-            // exposePort(port)
-            // exposePort(debugPort)
-            // Random beacuse of https://wiki.apache.org/tomcat/HowTo/FasterStartUp
-            entryPoint(['java', '-Xmx64m', '-Xss1024k',
-                        "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n",
-                        "-Djava.security.egd=file:/dev/./urandom", 
-                        '-Dspring.profiles.active=compose', 
-                        "-jar", "/${project.name}/${project.name}.jar"])
-            defaultCommand(["-Dspring.profiles.active=compose"])
-		}
-		createDockerTaskWithPort = { ports ->
-			project.task([type: Docker], "dockerBuild", ext.dockerConfiguration.curry(ports))
-		}
-	}    
-    dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-        testImplementation('org.springframework.boot:spring-boot-starter-test'){
-            exclude group:'junit', module:'junit'
-        }
-        testImplementation('org.junit.jupiter:junit-jupiter-api')
-        testImplementation("org.junit.jupiter:junit-jupiter-engine")
-        testImplementation('org.springframework.security:spring-security-test')
-        testImplementation project(':common-tests')
-    }
-}
-
-configure(findProjects(services)){
-    dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
-        implementation 'org.springframework.cloud:spring-cloud-starter-config'
-        
-        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-        implementation 'org.springframework.cloud:spring-cloud-starter-config'
-        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
-        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard'
-        implementation 'com.querydsl:querydsl-jpa'
-        
-        implementation project(':commons')
-        implementation 'commons-io:commons-io:2.5'
-        runtimeOnly 'mysql:mysql-connector-java'
-        runtimeOnly 'com.h2database:h2'
-        runtimeOnly 'org.flywaydb:flyway-core'
-        runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-    }
-}
-
-dockerCompose {
-    useComposeFiles = ['./docker/cloud-server-compose.yml']
-    startedServices = ['configservice', 'eurekaservice']
-}
-
-String getProp(String propName) {
-	return System.properties[propName] ?:
-			project.gradle.startParameter.systemPropertiesArgs.get(propName) ?:
-					hasProperty(propName) ? property(propName) :
-							System.getenv(propName) ?: ""
-}
+apply from: "gradle-configuration/configJavaApps.gradle"
+apply from: "gradle-configuration/configCheck.gradle"
+apply from: "gradle-configuration/configBootApps.gradle"
+apply from: "gradle-configuration/configServiceApps.gradle"

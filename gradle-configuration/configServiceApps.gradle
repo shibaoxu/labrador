@@ -1,0 +1,21 @@
+configure(serviceApps.collect({project(it)})){
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+        implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+        implementation 'org.springframework.cloud:spring-cloud-starter-config'
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard'
+        implementation 'com.querydsl:querydsl-jpa'
+
+        implementation project(':commons')
+        implementation 'commons-io:commons-io:2.5'
+        runtimeOnly 'mysql:mysql-connector-java'
+        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'org.flywaydb:flyway-core'
+        runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    }
+}

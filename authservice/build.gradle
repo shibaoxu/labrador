@@ -1,2 +1,2 @@
 description = 'SSO Server'
-createDockerTaskWithPort([6060])
+//createDockerTaskWithPort([6060])

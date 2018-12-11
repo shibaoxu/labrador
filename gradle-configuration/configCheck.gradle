@@ -1,0 +1,37 @@
+configure(javaApps.collect({project(it)})) {
+    apply plugin: 'checkstyle'
+    apply plugin: 'findbugs'
+    apply plugin: 'pmd'
+    apply plugin: 'jacoco'
+
+    checkstyle {
+        ignoreFailures = true
+        checkstyleTest.enabled = false
+    }
+
+    findbugs {
+        ignoreFailures = true
+        findbugsTest.enabled = false
+    }
+    tasks.withType (FindBugs) {
+        reports {
+            xml.enabled false
+            html.enabled true
+        }
+    }
+    jacoco {
+        toolVersion = '0.8.1'
+        reportsDir = file("$buildDir/reports/jacoco")
+    }
+    jacocoTestReport {
+        reports {
+            xml.enabled false
+            csv.enabled false
+            html.destination file("${buildDir}/reports/jacoco/jacocoHtml")
+        }
+    }
+    pmd{
+        ignoreFailures=true
+    }
+
+}

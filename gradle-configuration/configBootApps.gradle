@@ -1,0 +1,30 @@
+configure(bootApps.collect({project(it)})){
+    apply plugin: 'org.springframework.boot'
+
+    bootRun {
+        systemProperties  System.properties
+    }
+
+    test {
+        systemProperty  'spring.profiles.active', System.getProperty('spring.profiles.active')
+    }
+
+    springBoot {
+        buildInfo()
+    }
+
+    ext {
+        profile = System.getProperty('spring.profiles.active')
+    }
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test'){
+            exclude group:'junit', module:'junit'
+        }
+        testImplementation('org.junit.jupiter:junit-jupiter-api')
+        testImplementation("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation('org.springframework.security:spring-security-test')
+        testImplementation project(':common-tests')
+    }
+}
