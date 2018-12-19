@@ -1,6 +1,6 @@
 package com.labrador.authservice
 
-import com.labrador.commontests.BaseTest
+import com.labrador.commons.test.BaseTest
 import groovy.json.JsonSlurper
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired

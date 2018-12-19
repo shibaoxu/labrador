@@ -1,4 +1,4 @@
-package com.labrador.commontests;
+package com.labrador.commons.test;
 
 
 import org.springframework.test.context.ActiveProfilesResolver;

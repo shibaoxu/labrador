@@ -20,10 +20,10 @@ buildscript {
 ext{
     javaApps = [
             ':authservice',':adminservice', 'accountservice',
-            ':commons', ':common-tests',
+            ':commons', ':commons-test',
             ':eurekaservice', ':configservice', ':turbineservice', ':zuulservice'
     ]
-    bootApps = javaApps - ':commons' - ':common-tests'
+    bootApps = javaApps - ':commons' - ':commons-test'
     cloudServer = [':eurekaservice', ':configservice', ':turbineservice', ':zuulservice']
     serviceApps = bootApps - cloudServer
     jsApps = []

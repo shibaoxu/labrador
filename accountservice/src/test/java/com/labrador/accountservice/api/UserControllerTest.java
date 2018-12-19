@@ -3,8 +3,8 @@ package com.labrador.accountservice.api;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import com.labrador.accountservice.entity.User;
-import com.labrador.accountservice.utils.MockMvcTestUtils;
-import com.labrador.commontests.SpringProfileActive;
+import com.labrador.commons.test.MockMvcTestUtils;
+import com.labrador.commons.test.SpringProfileActive;
 import net.minidev.json.JSONArray;
 import org.assertj.core.groups.Tuple;
 import org.assertj.core.util.Strings;
@@ -27,7 +27,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.io.UnsupportedEncodingException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -35,7 +34,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.labrador.accountservice.utils.LabradorAssertions.assertThat;
+import static com.labrador.commons.test.asserts.LabradorAssertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

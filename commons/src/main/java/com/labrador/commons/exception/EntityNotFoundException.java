@@ -1,6 +1,5 @@
-package com.labrador.accountservice.exception;
+package com.labrador.commons.exception;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.labrador.accountservice.utils;
+package com.labrador.commons.test;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;

@@ -2,8 +2,8 @@ package com.labrador.accountservice.service;
 
 import com.labrador.accountservice.entity.Role;
 import com.labrador.accountservice.entity.User;
-import com.labrador.accountservice.exception.BusinessException;
-import com.labrador.accountservice.exception.ResourceNotFoundException;
+import com.labrador.commons.exception.BusinessException;
+import com.labrador.commons.exception.ResourceNotFoundException;
 import com.labrador.accountservice.repository.RoleRepository;
 import com.labrador.accountservice.repository.UserRepository;
 import lombok.NonNull;
@@ -101,7 +101,7 @@ public class UserService {
             userRepository.save(user);
         } catch (EntityNotFoundException ex) {
             log.warn("unable get the user with id {}", userId);
-            throw new com.labrador.accountservice.exception.EntityNotFoundException(User.class.getName(), userId);
+            throw new com.labrador.commons.exception.EntityNotFoundException(User.class.getName(), userId);
         }
     }
 
@@ -114,7 +114,7 @@ public class UserService {
             userRepository.save(user);
         } catch (EntityNotFoundException ex) {
             log.warn("unable get the user with id {}", userId);
-            throw new com.labrador.accountservice.exception.EntityNotFoundException(User.class.getName(), userId);
+            throw new com.labrador.commons.exception.EntityNotFoundException(User.class.getName(), userId);
         }
     }
 
@@ -130,7 +130,7 @@ public class UserService {
             }
         } catch (EntityNotFoundException ex) {
             log.warn("unable get the user with id {}", userId);
-            throw new com.labrador.accountservice.exception.EntityNotFoundException(User.class.getName(), userId);
+            throw new com.labrador.commons.exception.EntityNotFoundException(User.class.getName(), userId);
         }
     }
 }

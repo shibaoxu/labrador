@@ -9,5 +9,5 @@
 
 rootProject.name = 'labrador'
 include 'authservice', 'adminservice', 'accountservice'
-include 'commons', 'common-tests'
+include 'commons', 'commons-test'
 include 'eurekaservice', 'configservice', 'turbineservice', 'zuulservice'

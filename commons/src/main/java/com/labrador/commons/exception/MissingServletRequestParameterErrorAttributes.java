@@ -1,4 +1,4 @@
-package com.labrador.accountservice.exception;
+package com.labrador.commons.exception;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.context.MessageSource;

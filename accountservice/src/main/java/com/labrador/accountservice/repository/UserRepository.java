@@ -47,7 +47,7 @@ public interface UserRepository extends JpaRepository<User, String> {
         } catch (EntityNotFoundException ex) {
             Logger logger = LoggerFactory.getLogger(UserRepository.class.getName());
             logger.warn("try update a nonexist user with id {}", user.getId());
-            throw new com.labrador.accountservice.exception.EntityNotFoundException(user.getClass().getName(), user.getId());
+            throw new com.labrador.commons.exception.EntityNotFoundException(user.getClass().getName(), user.getId());
         }
     }
 

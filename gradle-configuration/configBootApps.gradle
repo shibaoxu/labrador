@@ -16,6 +16,7 @@ configure(bootApps.collect({project(it)})){
     ext {
         profile = System.getProperty('spring.profiles.active')
     }
+    
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
@@ -25,6 +26,6 @@ configure(bootApps.collect({project(it)})){
         testImplementation('org.junit.jupiter:junit-jupiter-api')
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation('org.springframework.security:spring-security-test')
-        testImplementation project(':common-tests')
+        testImplementation project(':commons-test')
     }
 }

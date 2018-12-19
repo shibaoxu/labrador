@@ -12,6 +12,6 @@ spring:
     console:
       enabled: true
   messages:
-    basename: messages, ValidationMessges, classpath*:ValidationMessages
+    basename: messages, ValidationMessges, classpath*:com.labrador.commons.messages
   flyway:
     locations: classpath:db/migration/{vendor}

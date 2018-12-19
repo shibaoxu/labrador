@@ -1,4 +1,4 @@
-package com.labrador.accountservice.exception;
+package com.labrador.commons.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

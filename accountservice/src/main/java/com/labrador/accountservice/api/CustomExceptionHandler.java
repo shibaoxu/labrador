@@ -1,6 +1,6 @@
 package com.labrador.accountservice.api;
 
-import com.labrador.accountservice.exception.*;
+import com.labrador.commons.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
@@ -52,5 +52,4 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request){
         return new ResponseEntity<>(new ResourceNotFoundErrorAttributes(ex, request, messageSource), HttpStatus.NOT_FOUND);
     }
-
 }
