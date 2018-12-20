@@ -1,6 +1,5 @@
-package com.labrador.accountservice.api;
+package com.labrador.commons.exception;
 
-import com.labrador.commons.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
