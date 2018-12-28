@@ -3,7 +3,7 @@ spring:
     name: authservice
 ---
 spring:
-  profiles: dev, test
+  profiles: dev-h2, test-h2
   cloud:
     config:
       enabled: false

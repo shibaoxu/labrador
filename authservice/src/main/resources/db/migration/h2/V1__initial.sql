@@ -66,6 +66,8 @@ create table ClientDetails (
   additionalInformation VARCHAR(4096),
   autoApproveScopes VARCHAR(256)
 );
+INSERT INTO oauth_client_details(client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
+    VALUES ('trust-web', 'all', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', 'read,write', 'password,refresh_token', '', 'ROLE_OPTION', 43200, 302400, null, true);
 -- user schema
 CREATE TABLE users (
   id nvarchar(255) NOT NULL,

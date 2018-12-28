@@ -4,11 +4,8 @@ eureka:
   client:
     enabled: false
 
-
-whoami: from local
 spring:
   datasource:
-    url: jdbc:h2:~/labrador-account;AUTO_SERVER=TRUE
     username: sa
     password: newtouch
   h2:

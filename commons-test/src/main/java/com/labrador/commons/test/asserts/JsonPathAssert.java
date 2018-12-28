@@ -1,10 +1,17 @@
 package com.labrador.commons.test.asserts;
 
+import com.jayway.jsonpath.PathNotFoundException;
 import com.jayway.jsonpath.ReadContext;
 import org.assertj.core.api.AbstractAssert;
+import org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.ObjectError;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class JsonPathAssert extends AbstractAssert<JsonPathAssert, ReadContext> {
 
@@ -17,8 +24,22 @@ public class JsonPathAssert extends AbstractAssert<JsonPathAssert, ReadContext> 
     }
 
     public JsonPathAssert hasPath(String path){
-        if (actual.read(path) == null){
-            failWithMessage("Expeted path %s's value is <not null>, but was <null>", path);
+        try {
+            actual.read(path);
+        } catch (PathNotFoundException e){
+            failWithMessage("Expeted path <%s> exist, but it is not.", path);
+        }
+        return this;
+    }
+
+    public JsonPathAssert hasPaths(String... paths){
+        for(String path: paths){
+            try{
+                actual.read(path);
+            } catch (PathNotFoundException e){
+                failWithMessage("Expeted path <%s> exist, but it is not.", path);
+                break;
+            }
         }
         return this;
     }
@@ -53,11 +74,45 @@ public class JsonPathAssert extends AbstractAssert<JsonPathAssert, ReadContext> 
         return this;
     }
 
-    @SafeVarargs
-    public final <T> JsonPathAssert contains(String path, T... values){
-        List<T> actuals = actual.read(path);
-        if (!actuals.containsAll(Arrays.asList(values))){
-            failWithMessage("Expected values are not all contained in the value of %s", path);
+    public JsonPathAssert isNull(String path){
+        Object value = actual.read(path);
+        if (value != null){
+            failWithMessage("Expected value of %s to be <null> but it is not.", path);
+        }
+        return this;
+    }
+
+    public JsonPathAssert isEmpty(String path){
+        String value = actual.read(path);
+        if (!StringUtils.isEmpty(value)){
+            failWithMessage("Expected value of %s to be <Empty> but it is <%s>.", path, value);
+        }
+        return this;
+    }
+
+    public JsonPathAssert isBlank(String path){
+        String value = actual.read(path);
+        if (StringUtils.hasText(value)){
+            failWithMessage("Expected value of %s to be <Blank> but it is <%s>.", path, value);
+        }
+        return this;
+    }
+
+    public <T> JsonPathAssert contains(String path, T... values){
+        List<T> actualValues = actual.read(path);
+
+        Set<T> notFound = new HashSet<>();
+        for(T value: values){
+            if (!actualValues.contains(value)){
+                notFound.add(value);
+            }
+        }
+
+        if (!notFound.isEmpty()){
+            String actualMessage = String.join(",", actualValues.stream().map(Object::toString).collect(Collectors.toList()));
+            String expectedMessage = String.join(",", Arrays.stream(values).map(Object::toString).collect(Collectors.toList()));
+            String notFoundMessage = String.join(",", notFound.stream().map(Object::toString).collect(Collectors.toList()));
+            failWithMessage("Expected <%s> contain values <%s>, but <%s> not found.", actualMessage, expectedMessage, notFoundMessage);
         }
         return this;
     }

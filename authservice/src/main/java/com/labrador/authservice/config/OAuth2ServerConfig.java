@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 
 @Configuration
@@ -37,6 +38,9 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private DataSource dataSource;
+
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.tokenKeyAccess("permitAll()")
@@ -45,26 +49,28 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                .withClient(TRUST_WEB_APP)
-                    .resourceIds(RESOURCE_ID)
-                    .authorizedGrantTypes("password", "refresh_token")
-                    .scopes("all-web")
-                    .secret("{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2")
-                .and()
-                .withClient(TRUST_MOBILE_APP)
-                    .resourceIds(RESOURCE_ID)
-                    .authorizedGrantTypes("password", "refresh_token")
-                    .scopes("all-mobile")
-                    .secret("{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2")
-                .and()
-                .withClient(THIRD_PARTY_WEB_APP)
-                    .resourceIds(RESOURCE_ID)
-                    .authorizedGrantTypes("authorization_code", "refresh_token")
-                    .redirectUris("http://localhost:8080/code_callback", "http://localhost:8080/token_callback", "http://ali02.shibaoxu.cn:8081/login/oauth2/code/newtouchcloud")
-                    .scopes("third-party-web-app")
-                    .autoApprove(true)
-                    .secret("{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2");
+//        clients.inMemory()
+//                .withClient(TRUST_WEB_APP)
+//                    .resourceIds(RESOURCE_ID)
+//                    .authorizedGrantTypes("password", "refresh_token")
+//                    .scopes("read", "write")
+//                    .secret("{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2")
+//                    .authorities("ROLE_USER")
+//                .and()
+//                .withClient(TRUST_MOBILE_APP)
+//                    .resourceIds(RESOURCE_ID)
+//                    .authorizedGrantTypes("password", "refresh_token")
+//                    .scopes("all-mobile")
+//                    .secret("{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2")
+//                .and()
+//                .withClient(THIRD_PARTY_WEB_APP)
+//                    .resourceIds(RESOURCE_ID)
+//                    .authorizedGrantTypes("authorization_code", "refresh_token")
+//                    .redirectUris("http://localhost:8080/code_callback", "http://localhost:8080/token_callback", "http://ali02.shibaoxu.cn:8081/login/oauth2/code/newtouchcloud")
+//                    .scopes("third-party-web-app")
+//                    .autoApprove(true)
+//                    .secret("{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2");
+        clients.jdbc(dataSource);
     }
 
     @Override
@@ -95,6 +101,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
         defaultTokenServices.setTokenStore(tokenStore());
         defaultTokenServices.setSupportRefreshToken(true);
+//        defaultTokenServices.setAccessTokenValiditySeconds(50000);
         return defaultTokenServices;
     }
 
