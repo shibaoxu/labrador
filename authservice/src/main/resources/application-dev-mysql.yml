@@ -1,5 +1,3 @@
-server:
-  port: 6062
 eureka:
   client:
     enabled: false

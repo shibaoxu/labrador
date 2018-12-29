@@ -3,25 +3,7 @@ spring:
     name: authservice
 ---
 spring:
-  profiles: dev-h2, test-h2
+  profiles: dev-h2, dev-mysql, test-h2, test-mysql
   cloud:
     config:
       enabled: false
----
-spring:
-  profiles: compose
-  cloud:
-    config:
-      uri: http://configservice:8888
-      fail-fast: true
-      retry:
-        initial-interval: 1000
-        max-attempts: 6
-        max-interval: 2000
-        multiplier: 1.1
----
-spring:
-  profiles: local
-  cloud:
-    config:
-      uri: http://localhost:8888
