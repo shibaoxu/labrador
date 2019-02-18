@@ -43,12 +43,9 @@ public class AuthTests {
     private MockMvc mockMvc;
 
     private static final String OAUTH_TOKEN_URL = "/oauth/token";
-    private static final String REFRESH_TOKEN_URL = "/oauth/refresh_token";
     private static final String USER_INFO_URL = "/user/me";
 
     private static final String TRUST_WEB_APP = "trust-web";
-    private static final String TRUST_MOBILE_APP = "trust-mobile";
-    private static final String THIRD_PARTY_WEB_APP = "third-party-web-app";
     private static final String CLIENT_PASSWORD = "password";
 
     private static final String GRANT_TYPE_OF_PASSWORD = "password";
@@ -150,6 +147,7 @@ public class AuthTests {
                 .with(httpBasic(clientId, clientSecret))
                 .accept(JSON_ACCEPT));
     }
+
 
     private ResultActions refreshToken(String refreshToken) throws Exception {
         return refreshToken(refreshToken, TRUST_WEB_APP, CLIENT_PASSWORD);

@@ -1,4 +1,9 @@
 spring:
-  profiles:
-    include:
-      - dev
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://git.dev.tencent.com/shi-baoxu/labrador-config
+          username: shi.baoxu@qq.com
+          password: scott689
+          search-paths: '{application}'

@@ -5,7 +5,7 @@ eureka:
 spring:
   datasource:
     username: root
-    password: newtouch
+    password: password
     url: jdbc:mysql://127.0.0.1/accountservice?useSSL=false&allowPublicKeyRetrieval=true
   messages:
     basename: messages, CommonExceptions

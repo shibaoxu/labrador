@@ -6,3 +6,4 @@ management:
     web:
       exposure:
         include: "*"
+memo: dev

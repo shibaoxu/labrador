@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+//        gradlePluginPortal()
         maven {
             url "http://maven.aliyun.com/nexus/content/groups/public/"
         }
@@ -13,7 +14,7 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21"
         classpath "io.franzbecker:gradle-lombok:1.14"
-
+        classpath 'com.bmuschko:gradle-docker-plugin:4.3.0'
     }
 }
 
@@ -31,7 +32,7 @@ ext{
 
 allprojects {
     group = 'com.labrador'
-    version = '0.0.1-SNAPSHOT'
+    version = '0.0.1-snapshot'
 }
 
 apply from: "gradle-configuration/configJavaApps.gradle"

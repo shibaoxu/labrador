@@ -113,55 +113,16 @@ REFERENCES users (id);
 
 
 INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20000','张三', 1, 'user', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
+VALUES ('297eaf7d508ebfe001508ebfefd20000','张三', 1, 'user', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
 
 INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('94cc5822179e4458a01b3f8346a25f4d', '李四:新致软件', 1, 'org:user', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
+VALUES ('94cc5822179e4458a01b3f8346a25f4d', '李四:新致软件', 1, 'org:user', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
 
 INSERT INTO users (id,  display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebff0aa0001', '系统管理员', 1, 'admin', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
+VALUES ('297eaf7d508ebfe001508ebff0aa0001', '系统管理员', 1, 'admin', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
 
 INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20011','test-user-1', 1, 'test-user-1', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20012','test-user-2', 1, 'test-user-2', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20013','test-user-3', 1, 'test-user-3', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20014','test-user-4', 1, 'test-user-4', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20015','test-user-5', 1, 'test-user-5', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20016','test-user-6', 1, 'test-user-6', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20017','test-user-7', 1, 'test-user-7', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20018','test-user-8', 1, 'test-user-8', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20019','test-user-9', 1, 'test-user-9', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20020','test-user-a', 1, 'test-user-a', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20021','test-user-b', 1, 'test-user-b', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20022','test-user-c', 1, 'test-user-c', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20023','test-user-d', 1, 'test-user-d', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20024','test-user-e', 1, 'test-user-e', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20025','test-user-f', 1, 'test-user-f', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20026','test-user-g', 1, 'test-user-26', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20027','test-user-h', 1, 'test-user-h', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20028','test-user-i', 1, 'test-user-i', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20029','test-user-j', 1, 'test-user-j', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
-INSERT INTO users (id, display_name, enabled, username, password, created_by, last_modified_by, created_date, last_modified_date)
-VALUES ('297eaf7d508ebfe001508ebfefd20030','test-user-k', 1, 'test-user-k', '{bcrypt}$2a$10$YJaafCPydYF.TVCpm92ciuV3.d2p9KDI0B33KHpfCNyS9T9UvEReu', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
+VALUES ('297eaf7d508ebfe001508ebfefd20011','test-user-1', 1, 'test-user-1', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', '297eaf7d508ebfe001508ebff0aa0001', '297eaf7d508ebfe001508ebff0aa0001', '2018-07-31 15:49:56.985', '2018-07-31 15:49:56.985');
 
 INSERT INTO roles (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('2d2994219a14476eba13c5036ecda147', 'ROLE_USER', '普通用户', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');
 INSERT INTO roles (ID, NAME, description, created_by, last_modified_by, created_date, last_modified_date) VALUES ('f2a26d2090624570b6bb630ab546c98f', 'ROLE_ADMIN', '系统管理员', 'system', 'system', '2018-07-31 15:49:56.985','2018-07-31 15:49:56.985');

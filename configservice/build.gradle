@@ -1,21 +1,8 @@
 description = 'Config Server'
+
+docker.springBootApplication.ports = [8888]
+createAppContainer.portBindings = ["8888:8888"]
+
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-config-server'
 }
-
-//task dockerBuild(type: Docker) {
-//    def profile = getProp('spring.profiles.active')
-//    // dryRun true
-//    dependsOn 'build'
-//    exposePort 8888
-//    addFile("${libsDir}/${project.name}-${version}.jar", "/${project.name}/lib/${project.name}.jar")
-//    addFile("../service-configrations", "/${project.name}/service-configrations")
-//    tagVersion = 'latest'
-//    workingDir("${project.name}/lib")
-//    entryPoint(['java', '-Xmx64m', '-Xss1024k',
-//                "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n",
-//                '-Djava.security.egd=file:/dev/./urandom', 
-//                '-Dspring.profiles.active=compose', 
-//                '-jar', "${project.name}.jar"])
-//    
-//}

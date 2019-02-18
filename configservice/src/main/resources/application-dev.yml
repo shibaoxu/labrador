@@ -6,4 +6,4 @@ spring:
     config:
       server:
         native:
-          search-locations: file:../service-configrations/{application}, file:../service-configrations
+          search-locations: classpath:/service-configrations/{application}, classpath:/service-configrations
