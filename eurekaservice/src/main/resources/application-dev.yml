@@ -1,14 +1,7 @@
-server:
-  port: 8761
 eureka:
   instance:
     hostname: localhost
-    preferIpAddress: true
-    statusPageUrlPath: http://${eureka.instance.hostname}:${server.port}/actuator/info
-    healthCheckUrlPath: http://${eureka.instance.hostname}:${server.port}/actuator/health
   client:
-    healthcheck:
-      enabled: true
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
     register-with-eureka: false

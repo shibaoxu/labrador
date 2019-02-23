@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: eurekaservice
+server:
+  port: 8761
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"

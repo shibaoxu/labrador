@@ -7,3 +7,7 @@ spring:
       server:
         native:
           search-locations: classpath:/service-configrations/{application}, classpath:/service-configrations
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

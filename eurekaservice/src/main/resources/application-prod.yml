@@ -1,0 +1,22 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka1:${server.port}/eureka/, http://eureka2:${server.port}/eureka/, http://eureka3:${server.port}/eureka/
+---
+spring:
+     profiles: eureka1
+eureka:
+  instance:
+    hostname: eureka1
+---
+spring:
+  profiles: eureka2
+eureka:
+  instance:
+    hostname: eureka2
+---
+spring:
+  profiles: eureka3
+eureka:
+  instance:
+    hostname: eureka3

@@ -83,6 +83,7 @@ configure(bootApps.collect({project(it)})){
         dependsOn dockerBuildImage
         targetImageId dockerBuildImage.getImageId()
         portBindings = project.defaultBindPorts
+        containerName = "${project.name}-${project.version}".toString()
 //        portBindings = ["8888:8888"]
         autoRemove = true
     }
