@@ -1,7 +1,11 @@
 description = 'Eureka Server'
 
-docker.springBootApplication.ports = [8761]
-createAppContainer.portBindings = ["8761:8761"]
+dockerCreateDockerfile.defaultCommand("-jar",
+            "-Dspring.profiles.active=dev",
+            "/app/${project.name}-${project.version}.jar")
+
+docker.springBootApplication.ports = ["$eurekaPort"]
+createAppContainer.portBindings = ["${eurekaPort}:${eurekaPort}"]
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'

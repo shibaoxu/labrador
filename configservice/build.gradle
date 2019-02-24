@@ -1,7 +1,11 @@
 description = 'Config Server'
 
-docker.springBootApplication.ports = [8888]
-createAppContainer.portBindings = ["8888:8888"]
+docker.springBootApplication.ports = ["${configPort}"]
+createAppContainer.portBindings = ["${configPort}:${configPort}"]
+dockerCreateDockerfile.defaultCommand("-jar",
+        "-Dspring.profiles.active=${project.profile}",
+        "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka".toString(),
+        "/app/${project.name}-${project.version}.jar")
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-config-server'

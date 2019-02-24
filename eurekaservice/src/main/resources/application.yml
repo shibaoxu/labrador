@@ -1,6 +1,7 @@
 spring:
   application:
     name: eurekaservice
+
 server:
   port: 8761
 management:
@@ -10,4 +11,8 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health, info
+eureka:
+  client:
+    healthcheck:
+      enabled: true

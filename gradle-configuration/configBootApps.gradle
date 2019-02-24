@@ -44,6 +44,7 @@ configure(bootApps.collect({project(it)})){
 
     docker {
         springBootApplication {
+            baseImage = "openjdk:8-jdk-alpine"
             ports = project.defaultExportPorts
             tag = "$dockerRegistry/$project.name:$project.version".toString()
         }
@@ -83,8 +84,8 @@ configure(bootApps.collect({project(it)})){
         dependsOn dockerBuildImage
         targetImageId dockerBuildImage.getImageId()
         portBindings = project.defaultBindPorts
-        containerName = "${project.name}-${project.version}".toString()
-//        portBindings = ["8888:8888"]
+        containerName = "${project.name}".toString()
+        network = "${dockerNetwork}".toString()
         autoRemove = true
     }
 
