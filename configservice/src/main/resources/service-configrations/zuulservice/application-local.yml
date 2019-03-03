@@ -1,12 +1,14 @@
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 8763
 
 zuul:
   sensitive-headers:
   routes:
-    adminservice:
-      path: /admin/**
+    configservice:
+      path: /config/**
     authservice:
       path: /auth/**
+    sina:
+      path: /sina/**
+      url: http://news.sina.com.cn
+desc: "zuul-local config-dev"

@@ -5,10 +5,10 @@ createAppContainer.portBindings = ["${configPort}:${configPort}"]
 
 startAppContainer.dependsOn ':eurekaservice:startAppContainer'
 
-dockerCreateDockerfile.defaultCommand("-jar",
-        "-Dspring.profiles.active=${project.profile}",
-        "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka".toString(),
-        "/app/${project.name}-${project.version}.jar")
+//dockerCreateDockerfile.defaultCommand("-jar",
+//        "-Dspring.profiles.active=${project.profile}",
+//        "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka".toString(),
+//        "/app/${project.name}-${project.version}.jar")
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-config-server'

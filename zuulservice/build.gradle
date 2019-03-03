@@ -1,4 +1,17 @@
 description = 'Zuul Server'
+
+docker.springBootApplication.ports = ["${zuulPort}"]
+createAppContainer.portBindings = ["${zuulPort}:${zuulPort}"]
+
+startAppContainer.dependsOn ':configservice:startAppContainer'
+
+//if (project.profile == 'local'){
+//    dockerCreateDockerfile.defaultCommand("-jar",
+//            "-Dspring.profiles.active=${project.profile}",
+//            "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka".toString(),
+//            "/app/${project.name}-${project.version}.jar")
+//}
+
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'

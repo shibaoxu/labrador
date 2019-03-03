@@ -7,5 +7,6 @@ spring:
           username: shi.baoxu@qq.com
           password: scott689
           search-paths: '{application}'
+
 server:
   port: 8888

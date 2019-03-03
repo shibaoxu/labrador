@@ -1,12 +1,19 @@
-spring:
-  application:
-    name: zuulservice
 server:
-  port: 8763
+  port: 9763
+ribbon:
+  ReadTimeout: 3000
+  SocketTimeout: 3000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
 zuul:
   sensitive-headers:
   routes:
-    adminservice:
-      path: /admin/**
+    configservice:
+      path: /config/**
     authservice:
       path: /auth/**

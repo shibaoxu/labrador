@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: configservice
+  cloud:
+    config:
+      server:
+        accept-empty: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+---
+spring:
+     profiles: dev
+eureka:
+  client:
+    enabled: false
+---
+spring:
+  profiles: local
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

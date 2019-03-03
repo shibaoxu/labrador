@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: configservice
-  cloud:
-    config:
-      server:
-        accept-empty: false
-server:
-  port: 8888

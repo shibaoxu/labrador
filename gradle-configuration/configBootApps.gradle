@@ -87,6 +87,14 @@ configure(bootApps.collect({project(it)})){
         containerName = "${project.name}".toString()
         network = "${dockerNetwork}".toString()
         autoRemove = true
+        if(project.profile == 'local'){
+            cmd = [
+                    "-jar",
+                    "-Dspring.profiles.active=${project.profile}",
+                    "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka/",
+                    "/app/${project.name}-${project.version}.jar"
+            ]
+        }
     }
 
     task startAppContainer(type: DockerStartContainer) {
