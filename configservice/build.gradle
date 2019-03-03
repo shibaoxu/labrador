@@ -3,12 +3,10 @@ description = 'Config Server'
 docker.springBootApplication.ports = ["${configPort}"]
 createAppContainer.portBindings = ["${configPort}:${configPort}"]
 
-startAppContainer.dependsOn ':eurekaservice:startAppContainer'
+dockerCreateDockerfile.instruction("HEALTHCHECK --interval=10s --timeout=3s --start-period=10s CMD curl -f --silent http://localhost:$configPort/actuator/health || exit 1")
 
-//dockerCreateDockerfile.defaultCommand("-jar",
-//        "-Dspring.profiles.active=${project.profile}",
-//        "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka".toString(),
-//        "/app/${project.name}-${project.version}.jar")
+//startAppContainer.dependsOn ':eurekaservice:startAppContainer'
+startAppContainer.dependsOn ':eurekaservice:healthCheck'
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-config-server'

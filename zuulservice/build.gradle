@@ -3,14 +3,9 @@ description = 'Zuul Server'
 docker.springBootApplication.ports = ["${zuulPort}"]
 createAppContainer.portBindings = ["${zuulPort}:${zuulPort}"]
 
-startAppContainer.dependsOn ':configservice:startAppContainer'
+dockerCreateDockerfile.instruction("HEALTHCHECK --interval=10s --timeout=3s --start-period=10s CMD curl -f --silent http://localhost:$zuulPort/actuator/health || exit 1")
 
-//if (project.profile == 'local'){
-//    dockerCreateDockerfile.defaultCommand("-jar",
-//            "-Dspring.profiles.active=${project.profile}",
-//            "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka".toString(),
-//            "/app/${project.name}-${project.version}.jar")
-//}
+startAppContainer.dependsOn ':configservice:healthCheck'
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'

@@ -1,6 +1,7 @@
 description = 'Eureka Server'
 
 docker.springBootApplication.ports = ["$eurekaPort"]
+dockerCreateDockerfile.instruction("HEALTHCHECK --interval=10s --timeout=3s --start-period=10s CMD curl -f --silent http://localhost:$eurekaPort/actuator/health || exit 1")
 createAppContainer.portBindings = ["${eurekaPort}:${eurekaPort}"]
 createAppContainer.cmd = null
 

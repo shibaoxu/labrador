@@ -21,6 +21,7 @@ import com.bmuschko.gradle.docker.tasks.DockerInfo
 import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
+import com.bmuschko.gradle.docker.tasks.container.extras.DockerWaitHealthyContainer
 import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
 
 configure(bootApps.collect({project(it)})){
@@ -44,7 +45,7 @@ configure(bootApps.collect({project(it)})){
 
     docker {
         springBootApplication {
-            baseImage = "openjdk:8-jdk-alpine"
+            baseImage = "shibaoxu/labrador-base:jdk8-alpine"
             ports = project.defaultExportPorts
             tag = "$dockerRegistry/$project.name:$project.version".toString()
         }
@@ -90,17 +91,22 @@ configure(bootApps.collect({project(it)})){
         if(project.profile == 'local'){
             cmd = [
                     "-jar",
-                    "-Dspring.profiles.active=${project.profile}",
-                    "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka/",
-                    "/app/${project.name}-${project.version}.jar"
+                    "-Dspring.profiles.active=${project.profile}".toString(),
+                    "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka/".toString(),
+                    "/app/${project.name}-${project.version}.jar".toString()
             ]
         }
     }
-
     task startAppContainer(type: DockerStartContainer) {
         description = '启动应用容器'
         dependsOn createAppContainer
         targetContainerId createAppContainer.getContainerId()
+    }
+    task healthCheck(type: DockerWaitHealthyContainer){
+        dependsOn startAppContainer
+        containerId = startAppContainer.getContainerId()
+        awaitStatusTimeout = 30
+        checkInterval = 500
     }
 
     task stopAppContainer(type: DockerStopContainer) {
