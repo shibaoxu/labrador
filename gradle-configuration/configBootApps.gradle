@@ -23,6 +23,8 @@ import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
 import com.bmuschko.gradle.docker.tasks.container.extras.DockerWaitHealthyContainer
 import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 
 configure(bootApps.collect({project(it)})){
     apply plugin: 'org.springframework.boot'
@@ -33,6 +35,7 @@ configure(bootApps.collect({project(it)})){
         profile = System.getProperty('spring.profiles.active')?:"prod"
         defaultExportPorts = [8080]
         defaultBindPorts = ["8080:8080"]
+        baseImageTag = "shibaoxu/labrador-base:jdk8-alpine"
     }
 
     springBoot {
@@ -45,7 +48,7 @@ configure(bootApps.collect({project(it)})){
 
     docker {
         springBootApplication {
-            baseImage = "shibaoxu/labrador-base:jdk8-alpine"
+            baseImage = baseImageTag
             ports = project.defaultExportPorts
             tag = "$dockerRegistry/$project.name:$project.version".toString()
         }
@@ -57,6 +60,13 @@ configure(bootApps.collect({project(it)})){
         }
     }
 
+    task buildBaseImage(type: DockerBuildImage){
+        inputDir = new File(rootProject.projectDir, 'docker/baseimage')
+        tags.add(baseImageTag)
+    }
+    task pushBaseImage(type: DockerPushImage){
+        imageName = baseImageTag
+    }
     dockerCreateDockerfile.defaultCommand("-jar",
             "-Dspring.profiles.active=${project.profile}",
             "/app/${project.name}-${project.version}.jar")
