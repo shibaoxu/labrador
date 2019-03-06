@@ -1,9 +1,5 @@
 server:
   port: 6060
-eureka:
-  client:
-    enabled: false
-
 spring:
   datasource:
     username: sa

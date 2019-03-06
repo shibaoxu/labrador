@@ -32,7 +32,13 @@ configure(javaApps.collect({project(it)})) {
             mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootVersion"
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
         }
-        dependencies {
+    }
+
+    dependencies{
+        constraints {
+            implementation 'org.springframework.security.oauth:spring-security-oauth2:2.3.5.RELEASE',
+                    'commons-io:commons-io:2.5',
+                    'org.springframework.security:spring-security-jwt:1.0.7.RELEASE'
         }
     }
 }

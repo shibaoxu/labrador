@@ -34,8 +34,10 @@ allprojects {
     group = 'com.labrador'
     version = '0.0.1-snapshot'
 }
-
 apply from: "gradle-configuration/configJavaApps.gradle"
 apply from: "gradle-configuration/configCheck.gradle"
 apply from: "gradle-configuration/configBootApps.gradle"
 apply from: "gradle-configuration/configServiceApps.gradle"
+
+dependencies {
+}

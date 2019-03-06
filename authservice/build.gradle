@@ -1,2 +1,6 @@
 description = 'SSO Server'
-//createDockerTaskWithPort([6060])
+
+dependencies{
+    implementation 'org.springframework.security.oauth:spring-security-oauth2',
+            'org.springframework.security:spring-security-jwt'
+}
