@@ -1,10 +1,10 @@
 description = 'Config Server'
 
-docker.springBootApplication.ports = ["${configPort}"]
-createAppContainer.portBindings = ["${configPort}:${configPort}"]
-
-dockerCreateDockerfile.instruction("HEALTHCHECK --interval=10s --timeout=3s --start-period=10s CMD curl -f --silent http://localhost:$configPort/actuator/health || exit 1")
-
+//docker.springBootApplication.ports = ["${configPort}"]
+//createAppContainer.portBindings = ["${configPort}:${configPort}"]
+//
+//dockerCreateDockerfile.instruction("HEALTHCHECK --interval=10s --timeout=3s --start-period=10s CMD curl -f --silent http://localhost:$configPort/actuator/health || exit 1")
+//
 //startAppContainer.dependsOn ':eurekaservice:startAppContainer'
 startAppContainer.dependsOn ':eurekaservice:healthCheck'
 

@@ -1,4 +1,13 @@
-spring:
-  profiles:
-    include:
-      - dev
+server:
+  port: 8761
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    renewal-percent-threshold: 0.49
+  instance:
+    hostname: localhost

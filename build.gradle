@@ -1,6 +1,10 @@
+//import com.bmuschko.gradle.docker.tasks.DockerInfo
+//import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+//import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+
 buildscript {
     repositories {
-//        gradlePluginPortal()
+        gradlePluginPortal()
         maven {
             url "http://maven.aliyun.com/nexus/content/groups/public/"
         }
@@ -11,33 +15,38 @@ buildscript {
     }
     dependencies{
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21"
         classpath "io.franzbecker:gradle-lombok:1.14"
-        classpath 'com.bmuschko:gradle-docker-plugin:4.3.0'
+        classpath 'com.bmuschko:gradle-docker-plugin:4.6.2'
     }
 }
 
 ext{
     javaApps = [
-            ':authservice',':adminservice', 'accountservice',
-            ':commons', ':commons-test',
-            ':eurekaservice', ':configservice', ':turbineservice', ':zuulservice'
+            'authservice','adminservice', 'accountservice',
+            'commons', 'commons-test',
+            'eurekaservice', 'configservice', 'turbineservice', 'zuulservice'
     ]
-    bootApps = javaApps - ':commons' - ':commons-test'
-    cloudServer = [':eurekaservice', ':configservice', ':turbineservice', ':zuulservice']
+    bootApps = javaApps - 'commons' - 'commons-test'
+    cloudServer = ['eurekaservice', 'configservice', 'turbineservice', 'zuulservice']
     serviceApps = bootApps - cloudServer
     jsApps = []
 }
 
+
 allprojects {
     group = 'com.labrador'
     version = '0.0.1-snapshot'
+    ext{
+        profile = System.getProperty('spring.profiles.active')?:"prod"
+    }
 }
+
 apply from: "gradle-configuration/configJavaApps.gradle"
-apply from: "gradle-configuration/configCheck.gradle"
 apply from: "gradle-configuration/configBootApps.gradle"
-apply from: "gradle-configuration/configServiceApps.gradle"
+apply from: "gradle-configuration/docker.gradle"
+
 
 dependencies {
 }

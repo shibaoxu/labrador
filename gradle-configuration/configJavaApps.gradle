@@ -1,7 +1,6 @@
 configure(javaApps.collect({project(it)})) {
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'com.gorylenko.gradle-git-properties'
     apply plugin: 'io.franzbecker.gradle-lombok'
 
     sourceCompatibility = 1.8

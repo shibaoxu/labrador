@@ -1,11 +1,11 @@
 description = 'Zuul Server'
 
-docker.springBootApplication.ports = ["${zuulPort}"]
-createAppContainer.portBindings = ["${zuulPort}:${zuulPort}"]
+//docker.springBootApplication.ports = ["${zuulPort}".toInteger()]
+//createAppContainer.portBindings = ["${zuulPort}:${zuulPort}"]
 
-dockerCreateDockerfile.instruction("HEALTHCHECK --interval=10s --timeout=3s --start-period=10s CMD curl -f --silent http://localhost:$zuulPort/actuator/health || exit 1")
+//dockerCreateDockerfile.instruction("HEALTHCHECK --interval=10s --timeout=3s --start-period=10s CMD curl -f --silent http://localhost:$zuulPort/actuator/health || exit 1")
 
-startAppContainer.dependsOn ':configservice:healthCheck'
+//startAppContainer.dependsOn ':configservice:healthCheck'
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'

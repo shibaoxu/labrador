@@ -1,11 +1,9 @@
 description = 'Eureka Server'
 
-docker.springBootApplication.ports = ["$eurekaPort"]
-dockerCreateDockerfile.instruction("HEALTHCHECK --interval=10s --timeout=3s --start-period=10s CMD curl -f --silent http://localhost:$eurekaPort/actuator/health || exit 1")
-createAppContainer.portBindings = ["${eurekaPort}:${eurekaPort}"]
-createAppContainer.cmd = null
+//docker.springBootApplication.ports = ["$eurekaPort"]
+//createAppContainer.portBindings = ["8080:6721"]
+//createAppContainer.cmd = null
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
-//    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 }
