@@ -45,7 +45,7 @@ allprojects {
 
 apply from: "gradle-configuration/configJavaApps.gradle"
 apply from: "gradle-configuration/configBootApps.gradle"
-apply from: "gradle-configuration/docker.gradle"
+apply from: "gradle-configuration/docker2.gradle"
 
 
 dependencies {

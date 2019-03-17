@@ -1,0 +1,44 @@
+import com.lablador.docker.DockerSpringBootPlugin
+
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+    dependencies{
+        classpath 'com.bmuschko:gradle-docker-plugin:4.6.2'
+    }
+}
+
+/****************************** 配置Root应用 ******************************
+ * Root应用中包含用于整个工程的任务，包括:
+ * dockerInfo: 等同于运行 docker info
+ * buildBootBaseImage: 创建整个工程的父镜像
+ * pushBaseImage: 把父镜像推送到镜像仓库
+ * setupNetwork: 创建docker网络
+ * setup: 创建docker网络，并创建spring boot基础镜像
+ *************************************************************************/
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+
+configure(bootApps.collect({project(it)})) {
+    apply plugin: DockerSpringBootPlugin
+    docker {
+        registryCredentials {
+            url = 'https://index.docker.io/v1/'
+            username = dockerRegistryUsername
+            password = dockerRegistryPassword
+            email = dockerRegistryEmail
+        }
+        springBoot {
+            baseImage = "${dockerBootBaseImage}"
+            tag = "$dockerRegistry/$project.name:$project.version".toString()
+//            ports = getAppPorts(project)
+        }
+    }
+}
