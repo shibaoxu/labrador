@@ -76,6 +76,7 @@ task setup(){
 
 task hello{
     doFirst {
+        println 'hello'
     }
 //    println project.emptyString.isAllWhitespace()
 }
@@ -113,12 +114,13 @@ configure(bootApps.collect({project(it)})) {
     }
     // 构建镜像之前先删除旧的镜像
     dockerBuildImage.dependsOn(removeAppImage)
+    dockerBuildImage.dependsOn(bootJar)
 
     /**
      * 由于要在容器的运行命令中增加-Dspring.profiles.active参数，所以重置了默认的command
      * 如果在运行gradle命令时没有指定-Dspring.profiles.active的值，则默认是prod
      */
-//    dockerCreateDockerfile.entryPoint("java")
+    dockerCreateDockerfile.entryPoint("java")
     dockerCreateDockerfile.defaultCommand("-jar",
             "-Dspring.profiles.active=${project.profile}",
             "/app/${project.name}-${project.version}.jar")

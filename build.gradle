@@ -49,4 +49,5 @@ apply from: "gradle-configuration/docker.gradle"
 
 
 dependencies {
+
 }
