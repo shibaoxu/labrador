@@ -6,7 +6,9 @@ spring:
           uri: https://git.dev.tencent.com/shi-baoxu/labrador-config
           username: shi.baoxu@qq.com
           password: scott689
-          search-paths: '{application}'
+          searchPaths:
+          - '{profile}'
+          - '{profile}/{application}'
 
 server:
   port: 8888
