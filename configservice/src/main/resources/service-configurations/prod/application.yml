@@ -1,0 +1,7 @@
+prod-application: /service-configurations/prod/application.yml
+message: prod-application
+spring:
+  cloud:
+    config:
+      allowOverride: true
+      overrideSystemProperties: false

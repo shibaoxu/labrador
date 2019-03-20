@@ -1,40 +1,28 @@
-import com.bmuschko.gradle.docker.tasks.DockerInfo
-import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
-import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
-import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
-import com.bmuschko.gradle.docker.tasks.container.extras.DockerWaitHealthyContainer
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
+import com.lablador.docker.DockerCommonPlugin
+import com.lablador.docker.DockerSpringBootPlugin
 
-buildscript {
-    repositories {
-        gradlePluginPortal()
-        maven {
-            url "http://maven.aliyun.com/nexus/content/groups/public/"
-        }
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        mavenCentral()
-    }
-    dependencies{
-        classpath 'com.bmuschko:gradle-docker-plugin:4.6.0'
-    }
-}
+/****************************** 配置Root应用 ******************************
+ * Root应用中包含用于整个工程的任务，包括:
+ * dockerInfo: 等同于运行 docker info
+ * buildBootBaseImage: 创建整个工程的父镜像
+ * pushBaseImage: 把父镜像推送到镜像仓库
+ * setupNetwork: 创建docker网络
+ * setup: 创建docker网络，并创建spring boot基础镜像
+ *************************************************************************/
+apply plugin: DockerCommonPlugin
 
-allprojects {
-    apply plugin: 'com.bmuschko.docker-remote-api'
-    apply plugin: 'com.bmuschko.docker-spring-boot-application'
-    apply plugin: 'com.bmuschko.docker-java-application'
-    
-    ext {
-        profile = System.getProperty('spring.profiles.active')?:"prod"
-        defaultExportPorts = [8080]
-        defaultBindPorts = ["8080:8080"]
-        baseImageTag = "shibaoxu/labrador-base:jdk8-alpine"
-    }
-
+/***
+ * 配置所有Spring Boot应用，共增加以下任务
+ * dockerBuildContext
+ * dockerCreateDockerfile
+ * dockerBuildImage
+ * dockerRemoveImage
+ * dockerCreateContainer
+ * dockerStartContainer
+ * dockerContainerHealthCheck
+ */
+configure(bootApps.collect({project(it)})) {
+    apply plugin: DockerSpringBootPlugin
     docker {
         registryCredentials {
             url = 'https://index.docker.io/v1/'
@@ -42,67 +30,9 @@ allprojects {
             password = dockerRegistryPassword
             email = dockerRegistryEmail
         }
-        springBootApplication {
-            baseImage = baseImageTag
-            ports = project.defaultExportPorts
+        springBoot {
+            baseImage = "${dockerBootBaseImage}"
             tag = "$dockerRegistry/$project.name:$project.version".toString()
         }
-    }
-}
-ext {
-    profile = System.getProperty('spring.profiles.active')?:"prod"
-    defaultExportPorts = [8080]
-    defaultBindPorts = ["8080:8080"]
-    baseImageTag = "shibaoxu/labrador-base:jdk8-alpine"
-}
-task info(type: DockerInfo){
-}
-
-configure(bootApps.collect({project(it)})) {
-
-    dockerCreateDockerfile.defaultCommand("-jar",
-            "-Dspring.profiles.active=${project.profile}",
-            "/app/${project.name}-${project.version}.jar")
-
-
-
-//    dockerBuildImage.dependsOn(removeAppImage)
-
-    task dockerInfo(type: DockerInfo){
-        description = '显示构建服务器Docker的相关系统信息'
-    }
-
-    task createAppContainer(type: DockerCreateContainer) {
-        description = '创建应用容器'
-        dependsOn dockerBuildImage
-        targetImageId dockerBuildImage.getImageId()
-        portBindings = project.defaultBindPorts
-        containerName = "${project.name}".toString()
-        network = "${dockerNetwork}".toString()
-        autoRemove = true
-        if(project.profile == 'local'){
-            cmd = [
-                    "-jar",
-                    "-Dspring.profiles.active=${project.profile}".toString(),
-                    "-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka/".toString(),
-                    "/app/${project.name}-${project.version}.jar".toString()
-            ]
-        }
-    }
-    task startAppContainer(type: DockerStartContainer) {
-        description = '启动应用容器'
-        dependsOn createAppContainer
-        targetContainerId createAppContainer.getContainerId()
-    }
-    task healthCheck(type: DockerWaitHealthyContainer){
-        dependsOn startAppContainer
-        containerId = startAppContainer.getContainerId()
-        awaitStatusTimeout = 30
-        checkInterval = 500
-    }
-
-    task stopAppContainer(type: DockerStopContainer) {
-        description = '停止应用容器'
-        targetContainerId createAppContainer.getContainerId()
     }
 }

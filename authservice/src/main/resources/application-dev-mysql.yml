@@ -1,3 +1,6 @@
+server:
+  port: 6060
+
 eureka:
   client:
     enabled: false
@@ -10,19 +13,19 @@ spring:
   messages:
     basename: messages, CommonExceptions
   flyway:
-    locations: classpath:db/migration/{vendor}
+    locations: classpath:db/migration/dev/{vendor}
     init-sqls:
     - "drop table if exists ClientDetails;"
-    - "drop table if exists flyway_schema_history "
-    - "drop table if exists oauth_access_token"
-    - "drop table if exists oauth_approvals"
-    - "drop table if exists oauth_client_details"
-    - "drop table if exists oauth_client_token"
-    - "drop table if exists oauth_code"
-    - "drop table if exists oauth_refresh_token"
-    - "drop table if exists users_roles"
-    - "drop table if exists roles"
-    - "drop table if exists users"
+    - "drop table if exists flyway_schema_history;"
+    - "drop table if exists oauth_access_token;"
+    - "drop table if exists oauth_approvals;"
+    - "drop table if exists oauth_client_details;"
+    - "drop table if exists oauth_client_token;"
+    - "drop table if exists oauth_code;"
+    - "drop table if exists oauth_refresh_token;"
+    - "drop table if exists users_roles;"
+    - "drop table if exists roles;"
+    - "drop table if exists users;"
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
     url: ${spring.datasource.url}

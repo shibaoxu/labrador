@@ -4,7 +4,7 @@ import org.gradle.api.Project
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 
-class DockerSpringBootApplication {
+class DockerSpringBoot {
     final Property<String> baseImage
     final Property<String> tag
     final ListProperty<Integer> ports
@@ -12,7 +12,7 @@ class DockerSpringBootApplication {
     final Property<String> profile
     public final String PROFILE_PROPERTY = 'spring.profiles.active'
 
-    DockerSpringBootApplication(Project project){
+    DockerSpringBoot(Project project){
         baseImage = project.objects.property(String)
         baseImage.set("${project.dockerBootBaseImage}")
 

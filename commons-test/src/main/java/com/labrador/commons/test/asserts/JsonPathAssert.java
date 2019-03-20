@@ -97,7 +97,7 @@ public class JsonPathAssert extends AbstractAssert<JsonPathAssert, ReadContext> 
         }
         return this;
     }
-
+    @SuppressWarnings("unchecked")
     public <T> JsonPathAssert contains(String path, T... values){
         List<T> actualValues = actual.read(path);
 

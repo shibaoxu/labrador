@@ -1,0 +1,2 @@
+prod-application-local: /service-configurations/prod/application.yml
+message: prod-application-prod

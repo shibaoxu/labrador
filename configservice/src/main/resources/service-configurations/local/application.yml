@@ -1,0 +1,7 @@
+local-application: /service-configurations/local/application.yml
+message: local-application
+spring:
+  cloud:
+    config:
+      allowOverride: true
+      overrideSystemProperties: false

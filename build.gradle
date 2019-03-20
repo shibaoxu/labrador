@@ -1,7 +1,3 @@
-//import com.bmuschko.gradle.docker.tasks.DockerInfo
-//import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-//import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-
 buildscript {
     repositories {
         gradlePluginPortal()
@@ -18,7 +14,6 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21"
         classpath "io.franzbecker:gradle-lombok:1.14"
-        classpath 'com.bmuschko:gradle-docker-plugin:4.6.2'
     }
 }
 
@@ -45,7 +40,8 @@ allprojects {
 
 apply from: "gradle-configuration/configJavaApps.gradle"
 apply from: "gradle-configuration/configBootApps.gradle"
-apply from: "gradle-configuration/docker2.gradle"
+apply from: "gradle-configuration/configDocker.gradle"
+apply from: "gradle-configuration/configServiceApps.gradle"
 
 
 dependencies {

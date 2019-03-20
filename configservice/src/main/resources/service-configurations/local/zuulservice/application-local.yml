@@ -1,0 +1,2 @@
+local-zuulservice-application-local: /service-configurations/local/zuulservice-local.yml
+message: local-zuulservice-application-local

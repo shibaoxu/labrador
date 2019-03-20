@@ -6,7 +6,8 @@ spring:
     config:
       server:
         native:
-          search-locations: classpath:/service-configrations/{application}, classpath:/service-configrations
+          # 顺序决定了覆盖的顺序
+          search-locations: classpath:/service-configurations/{profile}, classpath:/service-configurations/{profile}/{application}
 
 management:
   endpoints:

@@ -7,7 +7,7 @@ import org.gradle.api.provider.Provider
 import java.util.concurrent.Callable
 
 class Utils {
-    static Provider<String> determinImageTag(Project project, DockerSpringBootApplication dockerSpringBootApplication){
+    static Provider<String> determinImageTag(Project project, DockerSpringBoot dockerSpringBootApplication){
         project.provider(new Callable<String>() {
             @Override
             String call() throws Exception {

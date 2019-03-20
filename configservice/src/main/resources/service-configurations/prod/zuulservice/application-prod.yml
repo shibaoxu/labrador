@@ -1,0 +1,2 @@
+prod-zuulservice-application-prod: /service-configurations/prod/zuulservice-prod.yml
+message: prod-zuulservice-application-prod

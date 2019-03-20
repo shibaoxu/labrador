@@ -1,0 +1,2 @@
+local-application-local: /service-configurations/local/application.yml
+message: local-application-local

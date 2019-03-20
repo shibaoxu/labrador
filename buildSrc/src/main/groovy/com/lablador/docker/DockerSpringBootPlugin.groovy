@@ -3,6 +3,8 @@ package com.lablador.docker
 import com.bmuschko.gradle.docker.DockerExtension
 import com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
+import com.bmuschko.gradle.docker.tasks.container.extras.DockerWaitHealthyContainer
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
@@ -22,33 +24,43 @@ class DockerSpringBootPlugin implements Plugin<Project> {
     public static final BUILD_IMAGE_TASK_NAME = 'dockerBuildImage'
     public static final REMOVE_IMAGE_TASK_NAME = 'dockerRemoveImage'
     public static final CREATE_CONTAINER_TASK_NAME = 'dockerCreateContainer'
+    public static final START_CONTAINER_TASK_NAME = 'dockerStartContainer'
+    public static final HEALTH_CHECK_TASK_NAME = 'dockerContainerHealthCheck'
 
     @Override
     void apply(Project project) {
         project.plugins.apply(DockerRemoteApiPlugin)
         DockerExtension dockerExtension = project.extensions.getByType(DockerExtension)
 
-        DockerSpringBootApplication dockerSpringBootApplication = configureExtension(project, dockerExtension)
-
+        DockerSpringBoot dockerSpringBoot = configureExtension(project, dockerExtension)
 
         project.plugins.withType(JavaPlugin){
             project.plugins.withId('org.springframework.boot'){
                 Sync buildContextTask = createBuildContextTask(project)
-                Dockerfile createDockerfile = createDockerFileTask(project, dockerSpringBootApplication)
+                Dockerfile createDockerfile = createDockerFileTask(project, dockerSpringBoot)
                 createDockerfile.dependsOn buildContextTask
 
-                DockerRemoveImage dockerRemoveImage = createRemoveImageTask(project, dockerSpringBootApplication)
-                DockerBuildImage dockerBuildImage = createBuildImageTask(project, dockerSpringBootApplication)
+                DockerRemoveImage dockerRemoveImage = createRemoveImageTask(project, dockerSpringBoot)
+                DockerBuildImage dockerBuildImage = createBuildImageTask(project, dockerSpringBoot)
                 dockerBuildImage.dependsOn createDockerfile, dockerRemoveImage
 
-                DockerCreateContainer dockerCreateContainer = createCreateContainerTask(project, dockerSpringBootApplication)
+                DockerCreateContainer dockerCreateContainer = createCreateContainerTask(project, dockerSpringBoot)
                 dockerCreateContainer.dependsOn dockerBuildImage
+
+                DockerStartContainer dockerStartContainer = createStartContainerTask(project)
+                dockerStartContainer.dependsOn dockerCreateContainer
+                dockerStartContainer.containerId =  dockerCreateContainer.getContainerId()
+
+                DockerWaitHealthyContainer dockerWaitHealthyContainer = createHealthCheckTask(project)
+                dockerWaitHealthyContainer.dependsOn dockerStartContainer
+                dockerWaitHealthyContainer.containerId = dockerStartContainer.getContainerId()
+
             }
         }
     }
 
-    private static DockerSpringBootApplication configureExtension(Project project, DockerExtension dockerExtension){
-        ((ExtensionAware)dockerExtension).extensions.create(SPRING_BOOT_EXTENSION_NAME, DockerSpringBootApplication, project)
+    private static DockerSpringBoot configureExtension(Project project, DockerExtension dockerExtension){
+        ((ExtensionAware)dockerExtension).extensions.create(SPRING_BOOT_EXTENSION_NAME, DockerSpringBoot, project)
     }
 
     private static Sync createBuildContextTask(Project project){
@@ -65,7 +77,7 @@ class DockerSpringBootPlugin implements Plugin<Project> {
             }
         })
     }
-    private static Dockerfile createDockerFileTask(Project project, DockerSpringBootApplication dockerSpringBootApplication){
+    private static Dockerfile createDockerFileTask(Project project, DockerSpringBoot dockerSpringBoot){
         project.tasks.create(DOCKERFILE_TASK_NAME, Dockerfile, new Action<Dockerfile>() {
             @Override
             void execute(Dockerfile dockerfile) {
@@ -75,49 +87,44 @@ class DockerSpringBootPlugin implements Plugin<Project> {
                     from(project.provider(new Callable<Dockerfile.From>() {
                         @Override
                         Dockerfile.From call() throws Exception {
-                            new Dockerfile.From(dockerSpringBootApplication.baseImage.get())
+                            new Dockerfile.From(dockerSpringBoot.baseImage.get())
                         }
                     }))
                     workingDir('/app')
                     copyFile('app/*.jar', '.')
                     entryPoint('java', '-jar')
-                    if (dockerSpringBootApplication.profile.getOrNull()){
-                        defaultCommand("-D${dockerSpringBootApplication.PROFILE_PROPERTY}=${dockerSpringBootApplication.profile.get()}",
-                                "/app/${project.name}-${project.version}.jar")
-                    }else{
-                        defaultCommand("/app/${project.name}-${project.version}.jar")
-                    }
+                    defaultCommand("/app/${project.name}-${project.version}.jar")
 
-                    if (dockerSpringBootApplication.ports.get()){
-                        instruction("HEALTHCHECK CMD curl -f --silent http://localhost:${dockerSpringBootApplication.ports.get()[0]}/actuator/health || exit 1")
+                    if (dockerSpringBoot.ports.get()){
+                        instruction("HEALTHCHECK CMD curl -f --silent http://localhost:${dockerSpringBoot.ports.get()[0]}/actuator/health || exit 1")
                     }
-                    exposePort(dockerSpringBootApplication.ports)
+                    exposePort(dockerSpringBoot.ports)
                 }
             }
         })
     }
 
-    private static DockerBuildImage createBuildImageTask(Project project, DockerSpringBootApplication dockerSpringBootApplication){
+    private static DockerBuildImage createBuildImageTask(Project project, DockerSpringBoot dockerSpringBoot){
         project.tasks.create(BUILD_IMAGE_TASK_NAME, DockerBuildImage, new Action<DockerBuildImage>() {
             @Override
             void execute(DockerBuildImage dockerBuildImage) {
                 dockerBuildImage.with {
                     group = DockerRemoteApiPlugin.DEFAULT_TASK_GROUP
                     description = '为Spring boot应用创建docker镜像'
-                    tags.add(Utils.determinImageTag(project, dockerSpringBootApplication))
+                    tags.add(Utils.determinImageTag(project, dockerSpringBoot))
                 }
             }
         })
 
     }
-    private static DockerRemoveImage createRemoveImageTask(Project project, DockerSpringBootApplication dockerSpringBootApplication){
+    private static DockerRemoveImage createRemoveImageTask(Project project, DockerSpringBoot dockerSpringBoot){
         project.tasks.create(REMOVE_IMAGE_TASK_NAME, DockerRemoveImage, new Action<DockerRemoveImage>() {
             @Override
             void execute(DockerRemoveImage dockerRemoveImage) {
                 dockerRemoveImage.with {
                     group = DockerRemoteApiPlugin.DEFAULT_TASK_GROUP
                     description = '在构建新镜像之前删除具有同样tag的镜像'
-                    imageId = Utils.determinImageTag(project, dockerSpringBootApplication)
+                    imageId = Utils.determinImageTag(project, dockerSpringBoot)
                     onError { exception ->
                         if (!exception.message.contains('No such image')){
                             throw exception
@@ -133,31 +140,62 @@ class DockerSpringBootPlugin implements Plugin<Project> {
         })
     }
 
-    private static DockerCreateContainer createCreateContainerTask(Project project, DockerSpringBootApplication dockerSpringBootApplication){
+    private static DockerCreateContainer createCreateContainerTask(Project project, DockerSpringBoot dockerSpringBoot){
         project.tasks.create(CREATE_CONTAINER_TASK_NAME, DockerCreateContainer, new Action<DockerCreateContainer>() {
             @Override
             void execute(DockerCreateContainer dockerCreateContainer) {
                 dockerCreateContainer.with {
                     group = DockerRemoteApiPlugin.DEFAULT_TASK_GROUP
                     description = '创建Spring boot应用容器'
-                    targetImageId Utils.determinImageTag(project, dockerSpringBootApplication)
-                    portBindings = dockerSpringBootApplication.bindPorts
+                    targetImageId Utils.determinImageTag(project, dockerSpringBoot)
+                    portBindings = dockerSpringBoot.bindPorts
                     containerName = "${project.name}".toString()
                     network = "${project.dockerNetwork}".toString()
                     autoRemove = true
-
-                    if(dockerSpringBootApplication.profile == 'local' && !project.name.equals('eurekaservice')) {
-                        cmd = [
-                                "-jar",
-                                "-Dspring.profiles.active=${dockerSpringBootApplication.profile.get()}",
-                                "-Deureka.client.service-url.defaultZone=http://eurekaservice:${Utils.getAppPorts(project(':eurekaservice'))[0]}/eureka/".toString(),
-                                "/app/${project.name}-${project.version}.jar".toString()
-                        ]
-                    }
-
+                    cmd.set(determineContainerCommand(project, dockerSpringBoot))
                 }
             }
         })
+    }
+
+    private static DockerStartContainer createStartContainerTask(Project project){
+        project.tasks.create(START_CONTAINER_TASK_NAME, DockerStartContainer, new Action<DockerStartContainer>() {
+            @Override
+            void execute(DockerStartContainer dockerStartContainer) {
+                dockerStartContainer.with {
+                    group = DockerRemoteApiPlugin.DEFAULT_TASK_GROUP
+                    description = '启动Spring boot应用容器'
+                }
+            }
+        })
+    }
+
+    private static DockerWaitHealthyContainer createHealthCheckTask(Project project){
+        project.tasks.create(HEALTH_CHECK_TASK_NAME, DockerWaitHealthyContainer, new Action<DockerWaitHealthyContainer>() {
+            @Override
+            void execute(DockerWaitHealthyContainer dockerWaitHealthyContainer) {
+                dockerWaitHealthyContainer.with {
+                    group = DockerRemoteApiPlugin.DEFAULT_TASK_GROUP
+                    description = '检查Spring boot容器健康状态'
+                }
+            }
+        })
+    }
+
+
+    private static ArrayList<String> determineContainerCommand(Project project, DockerSpringBoot dockerSpringBoot){
+        def command = new ArrayList<String>()
+        if(dockerSpringBoot.profile.getOrNull()){
+            command.add("-Dspring.profiles.active=${dockerSpringBoot.profile.get()}")
+        }
+        command.add("-Dserver.port=${Utils.getAppPorts(project)[0]}")
+
+        def eurekaPort = Utils.getAppPorts(project.rootProject.findProject('eurekaservice'))[0]
+        if(dockerSpringBoot.profile.getOrNull() == 'local' && !project.name.equals('eurekaservice')) {
+            command.add("-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka/")
+        }
+        command.add("/app/${project.name}-${project.version}.jar")
+        return command
     }
 
 }
