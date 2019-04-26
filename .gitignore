@@ -1,6 +1,6 @@
 .DS_Store
 .gradle/*
-buildSrc/.gradle/*
+buildSrc/.gradle
 
 */build/*
 out/*
@@ -34,3 +34,4 @@ deploy/*.retry
 .vscode/
 */bin/
 */out/
+*.hprof

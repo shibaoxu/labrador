@@ -1,5 +1,24 @@
 description = 'SSO Server'
 
+sourceSets {
+    integTest {
+        java.srcDir file('src/integTest/java')
+        resources.srcDir file('src/integTest/resources')
+//        compileClasspath += sourceSets.main.output + configurations
+        runtimeClasspath += output + compileClasspath + configurations.testRuntime
+    }
+}
+
+task integTest(type: Test){
+    description = '执行集成测试'
+    group = 'verification'
+    testClassesDirs = sourceSets.integTest.output.classesDirs
+    classpath = sourceSets.integTest.runtimeClasspath
+    mustRunAfter test
+}
+
+check.dependsOn integTest
+
 dependencies{
     implementation 'org.springframework.security.oauth:spring-security-oauth2',
             'org.springframework.security:spring-security-jwt'
