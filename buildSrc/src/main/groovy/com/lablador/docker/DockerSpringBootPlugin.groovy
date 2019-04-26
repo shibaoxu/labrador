@@ -97,7 +97,7 @@ class DockerSpringBootPlugin implements Plugin<Project> {
 
                     if (dockerSpringBoot.ports.get()){
 //                        instruction("HEALTHCHECK CMD curl -f --silent http://localhost:${dockerSpringBoot.ports.get()[0]}/actuator/health || exit 1")
-                        instruction("HEALTHCHECK --interval=2s --timeout=2s CMD curl -f --silent http://localhost:${dockerSpringBoot.ports.get()[0]}/actuator/health || exit 1")
+                        instruction("HEALTHCHECK --interval=5s --timeout=30s CMD curl -f --silent http://localhost:${dockerSpringBoot.ports.get()[0]}/actuator/health || exit 1")
                     }
                     exposePort(dockerSpringBoot.ports)
                 }
@@ -178,7 +178,7 @@ class DockerSpringBootPlugin implements Plugin<Project> {
                     group = DockerRemoteApiPlugin.DEFAULT_TASK_GROUP
                     description = '检查Spring boot容器健康状态'
                     checkInterval = 1000
-                    awaitStatusTimeout = 30
+                    awaitStatusTimeout = 100
                 }
             }
         })
