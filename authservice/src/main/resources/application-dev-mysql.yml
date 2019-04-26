@@ -1,10 +1,6 @@
 server:
   port: 6060
 
-eureka:
-  client:
-    enabled: false
-
 spring:
   datasource:
     username: root
@@ -15,7 +11,6 @@ spring:
   flyway:
     locations: classpath:db/migration/dev/{vendor}
     init-sqls:
-    - "drop table if exists ClientDetails;"
     - "drop table if exists flyway_schema_history;"
     - "drop table if exists oauth_access_token;"
     - "drop table if exists oauth_approvals;"

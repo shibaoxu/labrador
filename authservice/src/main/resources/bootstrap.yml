@@ -19,7 +19,7 @@ spring:
       enabled: true
       discovery:
         service-id: configservice
-#        enabled: true
+        enabled: true
       allow-override: true
 eureka:
   client:

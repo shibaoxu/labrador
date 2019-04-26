@@ -9,5 +9,5 @@ repositories {
     mavenCentral()
 }
 dependencies{
-    implementation 'com.bmuschko:gradle-docker-plugin:4.6.2'
+    implementation 'com.bmuschko:gradle-docker-plugin:4.7.1'
 }

@@ -10,6 +10,16 @@ management:
     web:
       exposure:
         include: health, info
+  endpoint:
+    health:
+      show-details: always
+encrypt:
+  keyStore:
+    location: classpath:/configserverkey.jks
+    password: kG1#HFtSs8Ut7j
+    alias: configservicekey
+    secret: kG1#HFtSs8Ut7j
+
 ---
 spring:
      profiles: dev

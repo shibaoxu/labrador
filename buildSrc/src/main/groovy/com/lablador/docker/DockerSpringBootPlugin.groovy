@@ -96,7 +96,8 @@ class DockerSpringBootPlugin implements Plugin<Project> {
                     defaultCommand("/app/${project.name}-${project.version}.jar")
 
                     if (dockerSpringBoot.ports.get()){
-                        instruction("HEALTHCHECK CMD curl -f --silent http://localhost:${dockerSpringBoot.ports.get()[0]}/actuator/health || exit 1")
+//                        instruction("HEALTHCHECK CMD curl -f --silent http://localhost:${dockerSpringBoot.ports.get()[0]}/actuator/health || exit 1")
+                        instruction("HEALTHCHECK --interval=2s --timeout=2s CMD curl -f --silent http://localhost:${dockerSpringBoot.ports.get()[0]}/actuator/health || exit 1")
                     }
                     exposePort(dockerSpringBoot.ports)
                 }
@@ -115,7 +116,6 @@ class DockerSpringBootPlugin implements Plugin<Project> {
                 }
             }
         })
-
     }
     private static DockerRemoveImage createRemoveImageTask(Project project, DockerSpringBoot dockerSpringBoot){
         project.tasks.create(REMOVE_IMAGE_TASK_NAME, DockerRemoveImage, new Action<DockerRemoveImage>() {
@@ -177,6 +177,8 @@ class DockerSpringBootPlugin implements Plugin<Project> {
                 dockerWaitHealthyContainer.with {
                     group = DockerRemoteApiPlugin.DEFAULT_TASK_GROUP
                     description = '检查Spring boot容器健康状态'
+                    checkInterval = 1000
+                    awaitStatusTimeout = 30
                 }
             }
         })
@@ -193,9 +195,9 @@ class DockerSpringBootPlugin implements Plugin<Project> {
         def eurekaPort = Utils.getAppPorts(project.rootProject.findProject('eurekaservice'))[0]
         if(dockerSpringBoot.profile.getOrNull() == 'local' && !project.name.equals('eurekaservice')) {
             command.add("-Deureka.client.service-url.defaultZone=http://eurekaservice:${eurekaPort}/eureka/")
+            command.add("-Ddbserver=mysqlservice")
         }
         command.add("/app/${project.name}-${project.version}.jar")
         return command
     }
-
 }

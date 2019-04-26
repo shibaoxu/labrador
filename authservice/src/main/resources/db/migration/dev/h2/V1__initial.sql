@@ -53,19 +53,19 @@ create table oauth_approvals (
 
 
 -- customized oauth_client_details table
-create table ClientDetails (
-  appId VARCHAR(256) PRIMARY KEY,
-  resourceIds VARCHAR(256),
-  appSecret VARCHAR(256),
-  scope VARCHAR(256),
-  grantTypes VARCHAR(256),
-  redirectUrl VARCHAR(256),
-  authorities VARCHAR(256),
-  access_token_validity INTEGER,
-  refresh_token_validity INTEGER,
-  additionalInformation VARCHAR(4096),
-  autoApproveScopes VARCHAR(256)
-);
+-- create table ClientDetails (
+--   appId VARCHAR(256) PRIMARY KEY,
+--   resourceIds VARCHAR(256),
+--   appSecret VARCHAR(256),
+--   scope VARCHAR(256),
+--   grantTypes VARCHAR(256),
+--   redirectUrl VARCHAR(256),
+--   authorities VARCHAR(256),
+--   access_token_validity INTEGER,
+--   refresh_token_validity INTEGER,
+--   additionalInformation VARCHAR(4096),
+--   autoApproveScopes VARCHAR(256)
+-- );
 INSERT INTO oauth_client_details(client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
     VALUES ('trust-web', 'all', '{bcrypt}$2a$10$Oi6TUjsIUZX2yqnhJ5Iisep3af3vdEzsSmt6ztNiNccMjYAKN01J2', 'read,write', 'password,refresh_token', '', 'ROLE_OPTION', 43200, 302400, null, true);
 -- user schema
