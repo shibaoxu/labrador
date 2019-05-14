@@ -1,25 +1,32 @@
 description = 'SSO Server'
 
 sourceSets {
-    integTest {
-        java.srcDir file('src/integTest/java')
-        resources.srcDir file('src/integTest/resources')
-//        compileClasspath += sourceSets.main.output + configurations
-        runtimeClasspath += output + compileClasspath + configurations.testRuntime
+    intTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
     }
 }
 
-task integTest(type: Test){
-    description = '执行集成测试'
-    group = 'verification'
-    testClassesDirs = sourceSets.integTest.output.classesDirs
-    classpath = sourceSets.integTest.runtimeClasspath
-    mustRunAfter test
+configurations {
+    intTestImplementation.extendsFrom implementation, testImplementation
+    intTestRuntimeOnly.extendsFrom runtimeOnly, testRuntimeOnly
 }
 
-check.dependsOn integTest
+task integrationTest(type: Test) {
+    description = '执行集成测试'
+    group = 'verification'
+    testClassesDirs = sourceSets.intTest.output.classesDirs
+    classpath = sourceSets.intTest.runtimeClasspath
+    mustRunAfter test
+    doLast{
+        print configurations.getByName('jasper').asPath
+    }
+}
 
-dependencies{
+check.dependsOn integrationTest
+
+dependencies {
     implementation 'org.springframework.security.oauth:spring-security-oauth2',
             'org.springframework.security:spring-security-jwt'
 }
+

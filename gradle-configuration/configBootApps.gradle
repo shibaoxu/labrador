@@ -20,7 +20,7 @@ configure(bootApps.collect({project(it)})){
             exclude group:'junit', module:'junit'
         }
         testImplementation('org.junit.jupiter:junit-jupiter-api')
-        testImplementation("org.junit.jupiter:junit-jupiter-engine")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
         testImplementation('org.springframework.security:spring-security-test')
         testImplementation project(':commons-test')
     }
