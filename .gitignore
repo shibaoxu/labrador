@@ -35,3 +35,5 @@ deploy/*.retry
 */bin/
 */out/
 *.hprof
+
+*/logs
