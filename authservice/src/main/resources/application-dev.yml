@@ -7,7 +7,5 @@ spring:
   h2:
     console:
       enabled: true
-  messages:
-    basename: messages, CommonExceptions
   flyway:
     locations: classpath:db/migration/dev/{vendor}

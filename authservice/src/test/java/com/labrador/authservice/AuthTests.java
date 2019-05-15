@@ -4,6 +4,7 @@ import com.google.common.io.CharStreams;
 import com.jayway.jsonpath.JsonPath;
 import com.labrador.commons.test.MockMvcTestUtils;
 import com.labrador.commons.test.SpringProfileActive;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ public class AuthTests {
     private static final String ORG_USER_PASSWORD = "password";
 
     @Test
+    @DisplayName("登录成功")
     public void test_login_success() throws Exception {
         ResultActions actions = loginWithPassword(USER_NAME, USER_PASSWORD)
                 .andExpect(status().isOk());

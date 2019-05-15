@@ -24,6 +24,9 @@ configure(javaApps.collect({project(it)})) {
 
     test {
         useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed", "standardError"
+        }
     }
 
     dependencyManagement {
