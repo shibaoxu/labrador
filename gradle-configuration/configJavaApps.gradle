@@ -2,7 +2,6 @@ configure(javaApps.collect({project(it)})) {
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'io.franzbecker.gradle-lombok'
-//    apply plugin: "io.freefair.lombok"
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8

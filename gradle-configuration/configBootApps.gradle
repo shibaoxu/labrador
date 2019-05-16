@@ -10,7 +10,7 @@ configure(bootApps.collect({project(it)})){
     }
 
     test {
-        systemProperty  'spring.profiles.active', System.getProperty('spring.profiles.active')?:"prod"
+        systemProperty  'spring.profiles.active', System.getProperty('spring.profiles.active')?:"dev"
     }
 
     dependencies {
